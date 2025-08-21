@@ -1,10 +1,6 @@
 import React from 'react';
-import { Box, BoxProps } from '@mui/material';
-
-export interface AvatarProps extends Omit<BoxProps, 'component'> {
-  children: React.ReactNode;
-  size?: 'small' | 'medium' | 'large';
-}
+import { AvatarProps } from './avatar.types';
+import { StyledAvatar } from './avatar.styles';
 
 export const Avatar: React.FC<AvatarProps> = ({ 
   children, 
@@ -23,22 +19,15 @@ export const Avatar: React.FC<AvatarProps> = ({
   };
 
   return (
-    <Box
-      component="span"
+    <StyledAvatar
       sx={{
         width: getSize(),
         height: getSize(),
-        borderRadius: '50%',
-        backgroundColor: '#f3f4f6',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
         fontSize: `${getSize() * 0.5}px`,
-        flexShrink: 0,
       }}
       {...props}
     >
       {children}
-    </Box>
+    </StyledAvatar>
   );
 };

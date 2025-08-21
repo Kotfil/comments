@@ -3,13 +3,7 @@ import { Box } from '@mui/material';
 import { Comment } from '@/data/mock-comments';
 import { CommentHeader } from '@/components/molecules/comment-header';
 import { CommentContent } from '@/components/molecules/comment-content';
-
-export interface CommentItemProps {
-  comment: Comment;
-  level?: number;
-  onReply?: (comment: Comment) => void;
-  onAction?: (action: string, comment: Comment) => void;
-}
+import { CommentItemProps } from './comment-item.types';
 
 export const CommentItem: React.FC<CommentItemProps> = ({
   comment,

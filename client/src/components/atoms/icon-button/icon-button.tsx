@@ -1,11 +1,7 @@
 import React from 'react';
-import { IconButton as MuiIconButton, IconButtonProps, Tooltip } from '@mui/material';
-
-export interface IconButtonProps extends Omit<IconButtonProps, 'children'> {
-  icon: React.ReactNode;
-  tooltip?: string;
-  onClick?: () => void;
-}
+import { Tooltip } from '@mui/material';
+import { IconButtonProps } from './icon-button.types';
+import { StyledIconButton } from './icon-button.styles';
 
 export const IconButton: React.FC<IconButtonProps> = ({ 
   icon, 
@@ -14,13 +10,13 @@ export const IconButton: React.FC<IconButtonProps> = ({
   ...props 
 }) => {
   const button = (
-    <MuiIconButton
+    <StyledIconButton
       onClick={onClick}
       size="small"
       {...props}
     >
       {icon}
-    </MuiIconButton>
+    </StyledIconButton>
   );
 
   if (tooltip) {

@@ -1,21 +1,7 @@
 import React from 'react';
 import { Box, Typography, Alert } from '@mui/material';
 import { Input } from '@/components/atoms/input';
-
-export interface FormFieldProps {
-  label: string;
-  name: string;
-  value: string;
-  onChange: (value: string) => void;
-  error?: string;
-  helperText?: string;
-  type?: string;
-  placeholder?: string;
-  multiline?: boolean;
-  rows?: number;
-  required?: boolean;
-  infoText?: string;
-}
+import { FormFieldProps } from './form-field.types';
 
 export const FormField: React.FC<FormFieldProps> = ({
   label,

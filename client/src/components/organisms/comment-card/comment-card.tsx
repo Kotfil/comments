@@ -1,17 +1,10 @@
 import React from 'react';
-import { Box, Paper } from '@mui/material';
 import { Comment } from '@/data/mock-comments';
 import { UserInfo } from '@/components/molecules/user-info';
 import { ActionButtons } from '@/components/molecules/action-buttons';
 import { CommentContent } from '@/components/molecules/comment-content';
-import { HTMLRenderer } from '@/components/molecules/html-renderer';
-
-export interface CommentCardProps {
-  comment: Comment;
-  level?: number;
-  onReply?: (comment: Comment) => void;
-  onAction?: (action: string, comment: Comment) => void;
-}
+import { CommentCardProps } from './comment-card.types';
+import { StyledCommentCard, CommentCardHeader, CommentCardReplies } from './comment-card.styles';
 
 export const CommentCard: React.FC<CommentCardProps> = ({
   comment,
@@ -28,25 +21,8 @@ export const CommentCard: React.FC<CommentCardProps> = ({
   };
 
   return (
-    <Paper
-      elevation={1}
-      sx={{
-        p: 2,
-        mb: 2,
-        ml: level * 4,
-        position: 'relative',
-        '&::before': level > 0 ? {
-          content: '""',
-          position: 'absolute',
-          left: -16,
-          top: 0,
-          bottom: 0,
-          width: 2,
-          backgroundColor: '#e0e0e0',
-        } : {},
-      }}
-    >
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+    <StyledCommentCard level={level}>
+      <CommentCardHeader>
         <UserInfo
           author={comment.author}
           timestamp={comment.timestamp}
@@ -58,7 +34,7 @@ export const CommentCard: React.FC<CommentCardProps> = ({
           dislikes={comment.dislikes}
           onAction={handleAction}
         />
-      </Box>
+      </CommentCardHeader>
       
       <CommentContent
         content={comment.content}
@@ -67,7 +43,7 @@ export const CommentCard: React.FC<CommentCardProps> = ({
       
       {/* Рекурсивно рендерим ответы */}
       {comment.replies.length > 0 && (
-        <Box sx={{ mt: 2 }}>
+        <CommentCardReplies>
           {comment.replies.map((reply) => (
             <CommentCard
               key={reply.id}
@@ -77,8 +53,8 @@ export const CommentCard: React.FC<CommentCardProps> = ({
               onAction={onAction}
             />
           ))}
-        </Box>
+        </CommentCardReplies>
       )}
-    </Paper>
+    </StyledCommentCard>
   );
 };

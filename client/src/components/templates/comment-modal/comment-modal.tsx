@@ -1,14 +1,7 @@
 import React from 'react';
 import { Modal, Box } from '@mui/material';
 import { CommentForm, CommentFormData } from '@/components/organisms/comment-form';
-
-export interface CommentModalProps {
-  open: boolean;
-  onClose: () => void;
-  onSubmit: (data: CommentFormData) => void;
-  replyToComment?: { author: string; content: string } | null;
-  isSubmitting?: boolean;
-}
+import { CommentModalProps } from './comment-modal.types';
 
 export const CommentModal: React.FC<CommentModalProps> = ({
   open,

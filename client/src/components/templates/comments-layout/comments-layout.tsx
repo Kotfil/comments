@@ -1,15 +1,8 @@
 import React from 'react';
-import { Box, Container } from '@mui/material';
 import { Typography } from '@/components/atoms/typography';
 import { Button } from '@/components/atoms/button';
-
-export interface CommentsLayoutProps {
-  title: string;
-  children: React.ReactNode;
-  onAddComment?: () => void;
-  addButtonText?: string;
-  showAddButton?: boolean;
-}
+import { CommentsLayoutProps } from './comments-layout.types';
+import { StyledContainer, LayoutHeader } from './comments-layout.styles';
 
 export const CommentsLayout: React.FC<CommentsLayoutProps> = ({
   title,
@@ -19,8 +12,8 @@ export const CommentsLayout: React.FC<CommentsLayoutProps> = ({
   showAddButton = true,
 }) => {
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+    <StyledContainer maxWidth="lg">
+      <LayoutHeader>
         <Typography variant="h4" component="h1">
           {title}
         </Typography>
@@ -33,9 +26,9 @@ export const CommentsLayout: React.FC<CommentsLayoutProps> = ({
             {addButtonText}
           </Button>
         )}
-      </Box>
+      </LayoutHeader>
       
       {children}
-    </Container>
+    </StyledContainer>
   );
 };

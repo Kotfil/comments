@@ -1,11 +1,7 @@
 import React from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import { HTMLRenderer } from '@/components/molecules/html-renderer';
-
-export interface CommentContentProps {
-  content: string;
-  onReply?: () => void;
-}
+import { CommentContentProps } from './comment-content.types';
 
 export const CommentContent: React.FC<CommentContentProps> = ({
   content,

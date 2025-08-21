@@ -1,14 +1,8 @@
 import React from 'react';
-import { Box } from '@mui/material';
 import { IconButton } from '@/components/atoms/icon-button';
 import { Typography } from '@/components/atoms/typography';
-
-export interface ActionButtonsProps {
-  likes: number;
-  dislikes: number;
-  onAction?: (action: string) => void;
-  showVoteCounter?: boolean;
-}
+import { ActionButtonsProps } from './action-buttons.types';
+import { ActionButtonsContainer } from './action-buttons.styles';
 
 export const ActionButtons: React.FC<ActionButtonsProps> = ({
   likes,
@@ -21,7 +15,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
   };
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+    <ActionButtonsContainer>
       <IconButton
         icon="#"
         tooltip="Ссылка"
@@ -53,6 +47,6 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
           ↑{likes} ↓{dislikes}
         </Typography>
       )}
-    </Box>
+    </ActionButtonsContainer>
   );
 };

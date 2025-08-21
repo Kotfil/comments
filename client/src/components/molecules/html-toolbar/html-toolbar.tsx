@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Tooltip } from '@mui/material';
+import { Box } from '@mui/material';
 import {
   FormatItalic,
   FormatBold,
@@ -7,10 +7,7 @@ import {
   Link,
 } from '@mui/icons-material';
 import { IconButton } from '@/components/atoms/icon-button';
-
-export interface HTMLToolbarProps {
-  onInsertTag: (tag: string) => void;
-}
+import { HTMLToolbarProps } from './html-toolbar.types';
 
 export const HTMLToolbar: React.FC<HTMLToolbarProps> = ({ onInsertTag }) => {
   const toolbarItems = [

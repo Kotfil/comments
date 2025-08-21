@@ -3,21 +3,7 @@ import { Box, Typography, Alert } from '@mui/material';
 import { FormField } from '@/components/molecules/form-field';
 import { HTMLToolbar } from '@/components/molecules/html-toolbar';
 import { Button } from '@/components/atoms/button';
-
-export interface CommentFormData {
-  author: string;
-  email: string;
-  homepage?: string;
-  content: string;
-  captcha: string;
-}
-
-export interface CommentFormProps {
-  onSubmit: (data: CommentFormData) => void;
-  onCancel: () => void;
-  replyToComment?: { author: string; content: string } | null;
-  isSubmitting?: boolean;
-}
+import { CommentFormProps, CommentFormData } from './comment-form.types';
 
 export const CommentForm: React.FC<CommentFormProps> = ({
   onSubmit,
@@ -176,7 +162,7 @@ export const CommentForm: React.FC<CommentFormProps> = ({
       <FormField
         label="Home page"
         name="homepage"
-        value={formData.homepage}
+        value={formData.homepage || ''}
         onChange={handleInputChange('homepage')}
         error={errors.homepage}
         helperText="Необязательное поле (формат URL)"
@@ -193,7 +179,7 @@ export const CommentForm: React.FC<CommentFormProps> = ({
         multiline
         rows={4}
         required
-        infoText="Разрешенные HTML теги: <i>, <strong>, <code>, <a href="" title="">"
+        infoText="Разрешенные HTML теги: &lt;i&gt;, &lt;strong&gt;, &lt;code&gt;, &lt;a href=&quot;&quot; title=&quot;&quot;&gt;"
       />
 
       <HTMLToolbar onInsertTag={insertHTMLTag} />

@@ -1,17 +1,13 @@
 import React from 'react';
-import { Button as MuiButton, ButtonProps as MuiButtonProps } from '@mui/material';
-
-export interface ButtonProps extends Omit<MuiButtonProps, 'variant'> {
-  variant?: 'primary' | 'secondary' | 'outline';
-  children: React.ReactNode;
-}
+import { Button as MuiButton } from '@mui/material';
+import { ButtonProps } from './button.types';
 
 export const Button: React.FC<ButtonProps> = ({ 
   variant = 'primary', 
   children, 
   ...props 
 }) => {
-  const getMuiVariant = (): MuiButtonProps['variant'] => {
+  const getMuiVariant = (): 'contained' | 'outlined' | 'text' => {
     switch (variant) {
       case 'outline':
         return 'outlined';

@@ -2,15 +2,7 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { Avatar } from '@/components/atoms/avatar';
 import { IconButton } from '@/components/atoms/icon-button';
-
-export interface CommentHeaderProps {
-  author: string;
-  timestamp: string;
-  avatar: string;
-  likes: number;
-  dislikes: number;
-  onAction?: (action: string) => void;
-}
+import { CommentHeaderProps } from './comment-header.types';
 
 export const CommentHeader: React.FC<CommentHeaderProps> = ({
   author,
@@ -39,7 +31,7 @@ export const CommentHeader: React.FC<CommentHeaderProps> = ({
         <Typography variant="subtitle2" fontWeight={600}>
           {author}
         </Typography>
-        <Typography variant="caption" color="text.secondary">
+        <Typography variant="caption" color="secondary">
           {timestamp}
         </Typography>
       </Box>
@@ -71,7 +63,7 @@ export const CommentHeader: React.FC<CommentHeaderProps> = ({
           onClick={() => handleAction('share')}
         />
         
-        <Typography variant="caption" color="text.secondary">
+        <Typography variant="caption" color="secondary">
           ↑{likes} ↓{dislikes}
         </Typography>
       </Box>

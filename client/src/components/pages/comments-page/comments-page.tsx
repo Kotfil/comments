@@ -6,10 +6,7 @@ import { mockComments } from '@/data/mock-comments';
 import { CommentItem } from '@/components/organisms/comment-item';
 import { CommentModal } from '@/components/templates/comment-modal';
 import { Button as CustomButton } from '@/components/atoms/button';
-
-export interface CommentsPageProps {
-  onAddComment?: (commentData: any) => void;
-}
+import { CommentsPageProps } from './comments-page.types';
 
 export const CommentsPage: React.FC<CommentsPageProps> = ({ onAddComment }) => {
   const [comments, setComments] = useState<Comment[]>(mockComments);

@@ -1,8 +1,5 @@
 import React from 'react';
-
-export interface HTMLRendererProps {
-  content: string;
-}
+import { HTMLRendererProps } from './html-renderer.types';
 
 export const HTMLRenderer: React.FC<HTMLRendererProps> = ({ content }) => {
   // Разрешенные HTML теги

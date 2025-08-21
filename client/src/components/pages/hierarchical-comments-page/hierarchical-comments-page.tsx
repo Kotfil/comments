@@ -5,10 +5,7 @@ import { CommentsLayout } from '@/components/templates/comments-layout';
 import { CommentCard } from '@/components/organisms/comment-card';
 import { CommentModal } from '@/components/templates/comment-modal';
 import { CommentFormData } from '@/components/organisms/comment-form';
-
-export interface HierarchicalCommentsPageProps {
-  onAddComment?: (commentData: CommentFormData) => void;
-}
+import { HierarchicalCommentsPageProps } from './hierarchical-comments-page.types';
 
 export const HierarchicalCommentsPage: React.FC<HierarchicalCommentsPageProps> = ({ 
   onAddComment 
