@@ -38,7 +38,7 @@ export const CommentForm: React.FC<CommentFormProps> = ({
       newErrors.email = 'Неверный формат email';
     }
 
-    if (formData.homepage && !/^https?:\/\/.+/.test(formData.homepage)) {
+    if (formData.homepage && !/^(https?:\/\/.+|^[a-zA-Z0-9\/\-_]+)$/.test(formData.homepage)) {
       newErrors.homepage = 'Неверный формат URL';
     }
 

@@ -22,7 +22,13 @@ export const CommentCard: React.FC<CommentCardProps> = ({
 
   const handleHomepageClick = () => {
     if (comment.homepage && level === 0) {
-      window.open(comment.homepage, '_blank', 'noopener,noreferrer');
+      // Если это относительный путь, переходим на страницу комментария
+      if (comment.homepage.startsWith('http')) {
+        window.open(comment.homepage, '_blank', 'noopener,noreferrer');
+      } else {
+        // Переходим на страницу комментария в том же окне
+        window.location.href = `/${comment.homepage}`;
+      }
     }
   };
 
