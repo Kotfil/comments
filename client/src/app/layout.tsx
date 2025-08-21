@@ -1,12 +1,13 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import { ApolloProviderWrapper } from '@/providers/apollo-provider';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Comments App',
-  description: 'Приложение для управления комментариями',
+  description: 'Иерархические комментарии с GraphQL',
 };
 
 export default function RootLayout({
@@ -16,7 +17,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ru">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <ApolloProviderWrapper>
+          {children}
+        </ApolloProviderWrapper>
+      </body>
     </html>
   );
 }

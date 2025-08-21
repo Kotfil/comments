@@ -1,42 +1,46 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { Box, Typography, Paper, Container, Avatar, Chip } from '@mui/material';
-import { Comment } from '@/data/mock-comments';
-import { mockComments } from '@/data/mock-comments';
+import { Box, Typography, Paper, Container, Avatar, Chip, CircularProgress, Alert } from '@mui/material';
+import { useCommentByHomepage } from '@/hooks/use-comments';
 
 export default function HomePageComment() {
   const params = useParams();
-  const [comment, setComment] = useState<Comment | null>(null);
-  const [loading, setLoading] = useState(true);
+  const homepage = params.homepage as string;
+  
+  const { comment, loading, error, refetch } = useCommentByHomepage(homepage);
 
   useEffect(() => {
-    const homepage = params.homepage as string;
-    
-    // Ищем комментарий по homepage
-    const findCommentByHomepage = (comments: Comment[]): Comment | null => {
-      for (const comment of comments) {
-        if (comment.homepage === homepage) {
-          return comment;
-        }
-        if (comment.replies.length > 0) {
-          const found = findCommentByHomepage(comment.replies);
-          if (found) return found;
-        }
-      }
-      return null;
-    };
-
-    const foundComment = findCommentByHomepage(mockComments);
-    setComment(foundComment);
-    setLoading(false);
-  }, [params.homepage]);
+    if (homepage) {
+      refetch();
+    }
+  }, [homepage, refetch]);
 
   if (loading) {
     return (
       <Container maxWidth="md" sx={{ py: 4 }}>
-        <Typography>Загрузка...</Typography>
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+          <CircularProgress />
+        </Box>
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container maxWidth="md" sx={{ py: 4 }}>
+        <Alert severity="error" sx={{ mb: 2 }}>
+          Ошибка загрузки комментария: {error.message}
+        </Alert>
+        <Box textAlign="center">
+          <Typography variant="h6" color="text.secondary" gutterBottom>
+            Комментарий не найден
+          </Typography>
+          <Typography variant="body1" color="text.secondary">
+            Комментарий с URL "{homepage}" не существует.
+          </Typography>
+        </Box>
       </Container>
     );
   }
@@ -44,92 +48,91 @@ export default function HomePageComment() {
   if (!comment) {
     return (
       <Container maxWidth="md" sx={{ py: 4 }}>
-        <Typography variant="h4" color="error">
-          Комментарий не найден
-        </Typography>
-        <Typography variant="body1" sx={{ mt: 2 }}>
-          Комментарий с URL "{params.homepage}" не существует.
-        </Typography>
+        <Box textAlign="center">
+          <Typography variant="h6" color="text.secondary" gutterBottom>
+            Комментарий не найден
+          </Typography>
+          <Typography variant="body1" color="text.secondary">
+            Комментарий с URL "{homepage}" не существует.
+          </Typography>
+        </Box>
       </Container>
     );
   }
 
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
-      <Paper elevation={2} sx={{ p: 4 }}>
-        {/* Заголовок страницы */}
-        <Box sx={{ mb: 4, textAlign: 'center' }}>
-          <Typography variant="h3" component="h1" gutterBottom>
-            Комментарий от {comment.author}
-          </Typography>
-          <Typography variant="h6" color="text.secondary">
-            URL: {comment.homepage}
-          </Typography>
-        </Box>
-
-        {/* Информация о комментарии */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-          <Avatar sx={{ width: 56, height: 56, fontSize: '24px' }}>
+      <Paper elevation={2} sx={{ p: 3 }}>
+        {/* Заголовок */}
+        <Box display="flex" alignItems="center" mb={3}>
+          <Avatar sx={{ mr: 2, bgcolor: 'primary.main' }}>
             {comment.avatar}
           </Avatar>
           <Box>
-            <Typography variant="h6" fontWeight={600}>
-              {comment.author}
+            <Typography variant="h5" component="h1" gutterBottom>
+              Комментарий от {comment.author}
             </Typography>
             <Typography variant="body2" color="text.secondary">
               {comment.timestamp}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {comment.email}
-            </Typography>
           </Box>
         </Box>
 
-        {/* Содержание комментария */}
-        <Box sx={{ mb: 3 }}>
+        {/* URL комментария */}
+        <Box mb={3}>
+          <Chip 
+            label={`🌐 ${comment.homepage}`} 
+            variant="outlined" 
+            color="primary"
+            sx={{ fontSize: '1rem' }}
+          />
+        </Box>
+
+        {/* Содержимое комментария */}
+        <Box mb={3}>
           <Typography variant="h6" gutterBottom>
-            Текст комментария:
+            Содержание:
           </Typography>
-          <Paper variant="outlined" sx={{ p: 3, backgroundColor: '#fafafa' }}>
-            <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>
+          <Paper variant="outlined" sx={{ p: 2, bgcolor: 'grey.50' }}>
+            <Typography variant="body1" component="div">
               {comment.content}
             </Typography>
           </Paper>
         </Box>
 
         {/* Статистика */}
-        <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+        <Box display="flex" gap={2} mb={3}>
           <Chip 
             label={`👍 ${comment.likes}`} 
-            color="primary" 
-            variant="outlined" 
+            color="success" 
+            variant="outlined"
           />
           <Chip 
             label={`👎 ${comment.dislikes}`} 
-            color="secondary" 
-            variant="outlined" 
+            color="error" 
+            variant="outlined"
           />
           <Chip 
-            label={`💬 ${comment.replies.length} ответов`} 
+            label={`Уровень: ${comment.level}`} 
             color="info" 
-            variant="outlined" 
+            variant="outlined"
           />
         </Box>
 
         {/* Ответы */}
-        {comment.replies.length > 0 && (
+        {comment.replies && comment.replies.length > 0 && (
           <Box>
             <Typography variant="h6" gutterBottom>
               Ответы ({comment.replies.length}):
             </Typography>
-            {comment.replies.map((reply, index) => (
-              <Paper key={reply.id} variant="outlined" sx={{ p: 2, mb: 2, ml: 2 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
-                  <Avatar sx={{ width: 32, height: 32, fontSize: '16px' }}>
+            {comment.replies.map((reply) => (
+              <Paper key={reply.id} variant="outlined" sx={{ p: 2, mb: 2, ml: 3 }}>
+                <Box display="flex" alignItems="center" mb={1}>
+                  <Avatar sx={{ mr: 2, width: 32, height: 32 }}>
                     {reply.avatar}
                   </Avatar>
                   <Box>
-                    <Typography variant="subtitle2" fontWeight={600}>
+                    <Typography variant="subtitle1" fontWeight="bold">
                       {reply.author}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
@@ -140,13 +143,27 @@ export default function HomePageComment() {
                 <Typography variant="body2">
                   {reply.content}
                 </Typography>
+                <Box display="flex" gap={1} mt={1}>
+                  <Chip 
+                    label={`👍 ${reply.likes}`} 
+                    size="small"
+                    color="success" 
+                    variant="outlined"
+                  />
+                  <Chip 
+                    label={`👎 ${reply.dislikes}`} 
+                    size="small"
+                    color="error" 
+                    variant="outlined"
+                  />
+                </Box>
               </Paper>
             ))}
           </Box>
         )}
 
         {/* Кнопка возврата */}
-        <Box sx={{ mt: 4, textAlign: 'center' }}>
+        <Box textAlign="center" mt={4}>
           <Typography 
             variant="body2" 
             color="primary" 
@@ -160,3 +177,4 @@ export default function HomePageComment() {
     </Container>
   );
 }
+
