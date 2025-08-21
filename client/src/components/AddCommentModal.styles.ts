@@ -36,10 +36,16 @@ export const HTMLToolbar = styled.div`
 
 export const HTMLButton = styled(IconButton)`
   && {
-    padding: 8px;
+    padding: 4px;
     border: 1px solid #d1d5db;
     background-color: white;
     color: #374151;
+    width: 24px;
+    height: 24px;
+    
+    .MuiSvgIcon-root {
+      font-size: 12px;
+    }
     
     &:hover {
       background-color: #e5e7eb;
