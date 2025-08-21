@@ -6,9 +6,17 @@ import {
   TextField,
   Button,
   Alert,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
+import {
+  FormatItalic,
+  FormatBold,
+  Code,
+  Link,
+} from '@mui/icons-material';
 import { Comment } from '@/data/mock-comments';
-import { AddCommentModalContainer, ModalContent, FormSection } from './AddCommentModal.styles';
+import { AddCommentModalContainer, ModalContent, FormSection, HTMLToolbar, HTMLButton } from './AddCommentModal.styles';
 
 interface AddCommentModalProps {
   open: boolean;
@@ -51,6 +59,89 @@ export const AddCommentModal: React.FC<AddCommentModalProps> = ({
 
   const [errors, setErrors] = useState<FormErrors>({});
 
+  // Функция для вставки HTML тегов
+  const insertHTMLTag = (tag: string) => {
+    const textField = document.querySelector('textarea[name="content"]') as HTMLTextAreaElement;
+    if (!textField) return;
+
+    const start = textField.selectionStart;
+    const end = textField.selectionEnd;
+    const selectedText = formData.content.substring(start, end);
+
+    let newText = '';
+    let newCursorPos = start;
+
+    switch (tag) {
+      case 'i':
+        newText = `<i>${selectedText || 'курсивный текст'}</i>`;
+        newCursorPos = start + 3 + (selectedText ? selectedText.length : 15);
+        break;
+      case 'strong':
+        newText = `<strong>${selectedText || 'жирный текст'}</strong>`;
+        newCursorPos = start + 8 + (selectedText ? selectedText.length : 15);
+        break;
+      case 'code':
+        newText = `<code>${selectedText || 'код'}</code>`;
+        newCursorPos = start + 6 + (selectedText ? selectedText.length : 3);
+        break;
+      case 'a':
+        newText = `<a href="https://example.com" title="ссылка">${selectedText || 'ссылка'}</a>`;
+        newCursorPos = start + 9 + (selectedText ? selectedText.length : 5);
+        break;
+    }
+
+    const newContent = 
+      formData.content.substring(0, start) + 
+      newText + 
+      formData.content.substring(end);
+
+    setFormData(prev => ({
+      ...prev,
+      content: newContent,
+    }));
+
+    // Устанавливаем курсор в нужную позицию после обновления состояния
+    setTimeout(() => {
+      if (textField) {
+        textField.focus();
+        textField.setSelectionRange(newCursorPos, newCursorPos);
+      }
+    }, 0);
+  };
+
+  // Функция для валидации HTML тегов
+  const validateHTMLTags = (content: string): boolean => {
+    // Разрешенные теги
+    const allowedTags = ['i', 'strong', 'code', 'a'];
+    
+    // Регулярное выражение для поиска HTML тегов
+    const tagRegex = /<\/?([a-zA-Z]+)([^>]*)>/g;
+    let match;
+    
+    while ((match = tagRegex.exec(content)) !== null) {
+      const tagName = match[1].toLowerCase();
+      
+      // Проверяем, разрешен ли тег
+      if (!allowedTags.includes(tagName)) {
+        return false;
+      }
+      
+      // Для тега <a> проверяем атрибуты
+      if (tagName === 'a') {
+        const attributes = match[2];
+        const hrefMatch = attributes.match(/href\s*=\s*["']([^"']*)["']/);
+        const titleMatch = attributes.match(/title\s*=\s*["']([^"']*)["']/);
+        
+        // Проверяем, что href присутствует и является валидным URL
+        if (!hrefMatch || !/^https?:\/\/.+/.test(hrefMatch[1])) {
+          return false;
+        }
+      }
+    }
+    
+    return true;
+  };
+
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
 
@@ -78,6 +169,8 @@ export const AddCommentModal: React.FC<AddCommentModalProps> = ({
       newErrors.content = 'Текст комментария обязателен';
     } else if (formData.content.length < 10) {
       newErrors.content = 'Минимум 10 символов';
+    } else if (!validateHTMLTags(formData.content)) {
+      newErrors.content = 'Использованы неразрешенные HTML теги. Разрешены только: <i>, <strong>, <code>, <a href="" title="">';
     }
 
     // CAPTCHA validation
@@ -198,13 +291,43 @@ export const AddCommentModal: React.FC<AddCommentModalProps> = ({
             </FormSection>
 
             <FormSection>
+              <Alert severity="info" sx={{ mb: 2 }}>
+                <Typography variant="body2">
+                  <strong>Разрешенные HTML теги:</strong> <code>&lt;i&gt;</code>, <code>&lt;strong&gt;</code>, <code>&lt;code&gt;</code>, <code>&lt;a href="" title=""&gt;</code>
+                </Typography>
+              </Alert>
+              
+              <HTMLToolbar>
+                <Tooltip title="Курсив">
+                  <HTMLButton onClick={() => insertHTMLTag('i')}>
+                    <FormatItalic />
+                  </HTMLButton>
+                </Tooltip>
+                <Tooltip title="Жирный">
+                  <HTMLButton onClick={() => insertHTMLTag('strong')}>
+                    <FormatBold />
+                  </HTMLButton>
+                </Tooltip>
+                <Tooltip title="Код">
+                  <HTMLButton onClick={() => insertHTMLTag('code')}>
+                    <Code />
+                  </HTMLButton>
+                </Tooltip>
+                <Tooltip title="Ссылка">
+                  <HTMLButton onClick={() => insertHTMLTag('a')}>
+                    <Link />
+                  </HTMLButton>
+                </Tooltip>
+              </HTMLToolbar>
+
               <TextField
                 fullWidth
+                name="content"
                 label="Текст комментария *"
                 value={formData.content}
                 onChange={handleInputChange('content')}
                 error={!!errors.content}
-                helperText={errors.content || 'Минимум 10 символов'}
+                helperText={errors.content || 'Минимум 10 символов. Используйте кнопки выше для форматирования'}
                 variant="outlined"
                 size="small"
                 multiline
