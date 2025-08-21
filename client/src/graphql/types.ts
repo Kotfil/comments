@@ -7,8 +7,6 @@ export interface Comment {
   avatar: string;
   content: string;
   timestamp: string;
-  likes: number;
-  dislikes: number;
   level: number;
   replies: Comment[];
 }
@@ -57,4 +55,52 @@ export interface CreateReplyData {
 
 export interface CreateReplyVars {
   input: CreateReplyInput;
+}
+
+// Поисковые типы
+export interface SearchCommentsData {
+  searchComments: (Comment & {
+    score?: number;
+    highlight?: {
+      content?: string[];
+      author?: string[];
+    };
+  })[];
+}
+
+export interface SearchCommentsVars {
+  query: string;
+  filters?: any;
+}
+
+export interface SearchByContentData {
+  searchByContent: (Comment & { score?: number })[];
+}
+
+export interface SearchByContentVars {
+  content: string;
+}
+
+export interface SearchByAuthorData {
+  searchByAuthor: Comment[];
+}
+
+export interface SearchByAuthorVars {
+  author: string;
+}
+
+export interface SearchByHomepageData {
+  searchByHomepage: Comment[];
+}
+
+export interface SearchByHomepageVars {
+  homepage: string;
+}
+
+export interface GetSuggestionsData {
+  getSuggestions: string[];
+}
+
+export interface GetSuggestionsVars {
+  query: string;
 }

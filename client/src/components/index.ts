@@ -29,3 +29,6 @@ export { CommentsLayout } from './templates/comments-layout';
 // Pages - страницы приложения
 export { CommentsPage } from './pages/comments-page';
 export { HierarchicalCommentsPage } from './pages/hierarchical-comments-page';
+
+// Hooks
+export * from '@/hooks';

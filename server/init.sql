@@ -16,8 +16,7 @@ CREATE TABLE IF NOT EXISTS comments (
     avatar VARCHAR(10) DEFAULT '👤',
     content TEXT NOT NULL,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    likes INTEGER DEFAULT 0,
-    dislikes INTEGER DEFAULT 0,
+
     level INTEGER DEFAULT 0,
     parent_id UUID,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -100,8 +99,6 @@ RETURNS TABLE (
     avatar VARCHAR,
     content TEXT,
     timestamp TIMESTAMP,
-    likes INTEGER,
-    dislikes INTEGER,
     level INTEGER,
     created_at TIMESTAMP
 ) AS $$
@@ -115,8 +112,6 @@ BEGIN
         c.avatar,
         c.content,
         c.timestamp,
-        c.likes,
-        c.dislikes,
         c.level,
         c.created_at
     FROM comments c

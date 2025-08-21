@@ -42,7 +42,11 @@
     "class-transformer": "^0.5.1",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^9.0.2",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "@elastic/elasticsearch": "^8.12.0",
+    "@nestjs/elasticsearch": "^10.0.0",
+    "@nestjs/microservices": "^10.0.0",
+    "kafkajs": "^2.2.4"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

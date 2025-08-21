@@ -6,8 +6,6 @@ export interface Comment {
   avatar: string;
   content: string;
   timestamp: string;
-  likes: number;
-  dislikes: number;
   replies: Comment[];
   level: number;
 }
@@ -71,8 +69,6 @@ const generateRandomComment = (id: string, level: number = 0, parentAuthor?: str
     avatar,
     content,
     timestamp,
-    likes: Math.floor(Math.random() * 10),
-    dislikes: Math.floor(Math.random() * 3),
     level,
     replies: [],
   };

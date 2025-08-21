@@ -72,8 +72,6 @@ export const GET_COMMENTS = gql`
       avatar
       content
       timestamp
-      likes
-      dislikes
       level
       replies {
         id

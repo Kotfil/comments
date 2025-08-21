@@ -38,7 +38,9 @@ pnpm start:prod
 
 После запуска откройте: http://localhost:4000/graphql
 
-## 🗄️ Структура базы данных
+## 🗄️ Структура данных
+
+### PostgreSQL
 
 ### Таблица `comments`
 - `id` - UUID (Primary Key)
@@ -48,8 +50,7 @@ pnpm start:prod
 - `avatar` - VARCHAR(10) - Эмодзи аватар
 - `content` - TEXT - Содержимое комментария
 - `timestamp` - TIMESTAMP - Время создания
-- `likes` - INTEGER - Количество лайков
-- `dislikes` - INTEGER - Количество дизлайков
+
 - `level` - INTEGER - Уровень вложенности
 - `parent_id` - UUID - ID родительского комментария (для ответов)
 - `created_at` - TIMESTAMP - Время создания записи
@@ -65,8 +66,23 @@ pnpm start:prod
 ### Mutations
 - `createComment(input: CreateCommentInput!)` - Создать комментарий
 - `createReply(input: CreateReplyInput!)` - Создать ответ
-- `updateCommentReactions(id: ID!, likes: Int!, dislikes: Int!)` - Обновить реакции
+
 - `deleteComment(id: ID!)` - Удалить комментарий
+
+### Elasticsearch
+- `searchComments(query: String!, filters: JSON)` - Поиск комментариев
+- `searchByContent(content: String!)` - Поиск по содержимому
+- `searchByAuthor(author: String!)` - Поиск по автору
+- `searchByHomepage(homepage: String!)` - Поиск по HomePage
+- `getSuggestions(query: String!)` - Автодополнение
+
+### Kafka Events
+- `comment.created` - Событие создания комментария
+- `comment.deleted` - Событие удаления комментария
+- `comment.reply.created` - Событие создания ответа
+- `comment.search.requested` - Запрос поиска комментариев
+- `comment.index.requested` - Запрос индексации комментария
+- `comment.sync.requested` - Запрос синхронизации комментариев
 
 ## 📁 Структура проекта
 
@@ -106,6 +122,10 @@ pnpm schema:sync          # Синхронизация схемы
 - **GraphQL**: `/graphql`
 - **API**: `/api/*`
 - **Health Check**: `/api/health`
+- **Elasticsearch**: `http://localhost:9200`
+- **Kibana**: `http://localhost:5601`
+- **Kafka**: `localhost:9092`
+- **Kafka UI**: `http://localhost:8080`
 
 ## 🔒 Безопасность
 

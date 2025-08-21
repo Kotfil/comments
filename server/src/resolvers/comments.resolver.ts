@@ -23,6 +23,34 @@ export class CommentsResolver {
     return this.commentsService.findByHomepage(homepage);
   }
 
+  @Query(() => [Comment], { description: 'Поиск комментариев' })
+  async searchComments(
+    @Args('query') query: string,
+    @Args('filters', { nullable: true }) filters?: any,
+  ): Promise<Comment[]> {
+    return this.commentsService.searchComments(query, filters);
+  }
+
+  @Query(() => [Comment], { description: 'Поиск комментариев по содержимому' })
+  async searchByContent(@Args('content') content: string): Promise<Comment[]> {
+    return this.commentsService.searchByContent(content);
+  }
+
+  @Query(() => [Comment], { description: 'Поиск комментариев по автору' })
+  async searchByAuthor(@Args('author') author: string): Promise<Comment[]> {
+    return this.commentsService.searchByAuthor(author);
+  }
+
+  @Query(() => [Comment], { description: 'Поиск комментариев по HomePage' })
+  async searchByHomepage(@Args('homepage') homepage: string): Promise<Comment[]> {
+    return this.commentsService.searchByHomepage(homepage);
+  }
+
+  @Query(() => [String], { description: 'Получить предложения для автодополнения' })
+  async getSuggestions(@Args('query') query: string): Promise<string[]> {
+    return this.commentsService.getSuggestions(query);
+  }
+
   @Mutation(() => Comment, { description: 'Создать новый комментарий' })
   async createComment(
     @Args('input') createCommentDto: CreateCommentDto,
@@ -37,14 +65,7 @@ export class CommentsResolver {
     return this.commentsService.createReply(createReplyDto);
   }
 
-  @Mutation(() => Comment, { description: 'Обновить реакции комментария' })
-  async updateCommentReactions(
-    @Args('id') id: string,
-    @Args('likes') likes: number,
-    @Args('dislikes') dislikes: number,
-  ): Promise<Comment> {
-    return this.commentsService.updateReactions(id, likes, dislikes);
-  }
+
 
   @Mutation(() => Boolean, { description: 'Удалить комментарий' })
   async deleteComment(@Args('id') id: string): Promise<boolean> {

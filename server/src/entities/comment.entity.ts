@@ -41,13 +41,7 @@ export class Comment {
   @CreateDateColumn()
   timestamp: Date;
 
-  @Field(() => Int)
-  @Column({ type: 'int', default: 0 })
-  likes: number;
 
-  @Field(() => Int)
-  @Column({ type: 'int', default: 0 })
-  dislikes: number;
 
   @Field(() => Int)
   @Column({ type: 'int', default: 0 })

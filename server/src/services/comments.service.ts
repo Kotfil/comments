@@ -3,12 +3,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Comment } from '../entities/comment.entity';
 import { CreateCommentDto, CreateReplyDto } from '../dto/create-comment.dto';
+import { ElasticsearchCommentsService } from './elasticsearch.service';
+import { KafkaService } from './kafka.service';
 
 @Injectable()
 export class CommentsService {
   constructor(
     @InjectRepository(Comment)
     private commentsRepository: Repository<Comment>,
+    private readonly elasticsearchService: ElasticsearchCommentsService,
+    private readonly kafkaService: KafkaService,
   ) {}
 
   async findAll(): Promise<Comment[]> {
@@ -50,11 +54,25 @@ export class CommentsService {
       ...createCommentDto,
       level: 0,
       avatar: '👤',
-      likes: 0,
-      dislikes: 0,
     });
 
-    return this.commentsRepository.save(comment);
+    const savedComment = await this.commentsRepository.save(comment);
+    
+    // Индексируем в Elasticsearch
+    try {
+      await this.elasticsearchService.indexComment(savedComment);
+    } catch (error) {
+      console.error('Error indexing comment in Elasticsearch:', error);
+    }
+
+    // Отправляем событие в Kafka
+    try {
+      await this.kafkaService.emitCommentCreated(savedComment);
+    } catch (error) {
+      console.error('Error emitting comment created event to Kafka:', error);
+    }
+
+    return savedComment;
   }
 
   async createReply(createReplyDto: CreateReplyDto): Promise<Comment> {
@@ -66,25 +84,46 @@ export class CommentsService {
       parent_id: createReplyDto.parentId,
       level: parentComment.level + 1,
       avatar: '👤',
-      likes: 0,
-      dislikes: 0,
     });
 
-    return this.commentsRepository.save(reply);
+    const savedReply = await this.commentsRepository.save(reply);
+    
+    // Индексируем в Elasticsearch
+    try {
+      await this.elasticsearchService.indexComment(savedReply);
+    } catch (error) {
+      console.error('Error indexing reply in Elasticsearch:', error);
+    }
+
+    // Отправляем событие в Kafka
+    try {
+      await this.kafkaService.emitCommentReplyCreated(savedReply);
+    } catch (error) {
+      console.error('Error emitting comment reply created event to Kafka:', error);
+    }
+
+    return savedReply;
   }
 
-  async updateReactions(id: string, likes: number, dislikes: number): Promise<Comment> {
-    const comment = await this.findById(id);
-    
-    comment.likes = likes;
-    comment.dislikes = dislikes;
-    
-    return this.commentsRepository.save(comment);
-  }
+
 
   async delete(id: string): Promise<void> {
     const comment = await this.findById(id);
     await this.commentsRepository.remove(comment);
+    
+    // Удаляем из Elasticsearch
+    try {
+      await this.elasticsearchService.deleteComment(id);
+    } catch (error) {
+      console.error('Error deleting comment from Elasticsearch:', error);
+    }
+
+    // Отправляем событие в Kafka
+    try {
+      await this.kafkaService.emitCommentDeleted(id);
+    } catch (error) {
+      console.error('Error emitting comment deleted event to Kafka:', error);
+    }
   }
 
   // Метод для заполнения базы тестовыми данными
@@ -124,5 +163,26 @@ export class CommentsService {
 
       console.log('Database seeded with sample data');
     }
+  }
+
+  // Методы поиска через Elasticsearch
+  async searchComments(query: string, filters?: any): Promise<any[]> {
+    return this.elasticsearchService.searchComments(query, filters);
+  }
+
+  async searchByContent(content: string): Promise<any[]> {
+    return this.elasticsearchService.searchByContent(content);
+  }
+
+  async searchByAuthor(author: string): Promise<any[]> {
+    return this.elasticsearchService.searchByAuthor(author);
+  }
+
+  async searchByHomepage(homepage: string): Promise<any[]> {
+    return this.elasticsearchService.searchByHomepage(homepage);
+  }
+
+  async getSuggestions(query: string): Promise<string[]> {
+    return this.elasticsearchService.getSuggestions(query);
   }
 }

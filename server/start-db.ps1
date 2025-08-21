@@ -14,9 +14,9 @@ try {
 Write-Host "🛑 Остановка существующих контейнеров..." -ForegroundColor Yellow
 docker-compose down
 
-# Запускаем PostgreSQL
-Write-Host "🐘 Запуск PostgreSQL..." -ForegroundColor Yellow
-docker-compose up -d postgres
+# Запускаем PostgreSQL, Elasticsearch и Kafka
+Write-Host "🐘 Запуск PostgreSQL, Elasticsearch и Kafka..." -ForegroundColor Yellow
+docker-compose up -d postgres elasticsearch kibana zookeeper kafka kafka-ui
 
 # Ждем запуска PostgreSQL
 Write-Host "⏳ Ожидание запуска PostgreSQL..." -ForegroundColor Yellow
@@ -26,8 +26,12 @@ Start-Sleep -Seconds 10
 Write-Host "🔍 Проверка статуса..." -ForegroundColor Yellow
 docker-compose ps
 
-Write-Host "✅ PostgreSQL запущен!" -ForegroundColor Green
-Write-Host "📊 База данных: localhost:5432" -ForegroundColor Cyan
+Write-Host "✅ PostgreSQL, Elasticsearch и Kafka запущены!" -ForegroundColor Green
+Write-Host "📊 PostgreSQL: localhost:5432" -ForegroundColor Cyan
+Write-Host "🔍 Elasticsearch: http://localhost:9200" -ForegroundColor Cyan
+Write-Host "📊 Kibana: http://localhost:5601" -ForegroundColor Cyan
+Write-Host "🚀 Kafka: localhost:9092" -ForegroundColor Cyan
+Write-Host "📊 Kafka UI: http://localhost:8080" -ForegroundColor Cyan
 Write-Host "👤 Пользователь: postgres" -ForegroundColor Cyan
 Write-Host "🔑 Пароль: password" -ForegroundColor Cyan
 Write-Host "🗄️ База: comments_db" -ForegroundColor Cyan
