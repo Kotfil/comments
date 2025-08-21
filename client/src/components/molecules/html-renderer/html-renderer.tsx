@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { HTMLRendererProps } from './html-renderer.types';
 
 export const HTMLRenderer: React.FC<HTMLRendererProps> = ({ content }) => {
@@ -34,50 +34,55 @@ export const HTMLRenderer: React.FC<HTMLRendererProps> = ({ content }) => {
     ),
   };
 
-  // Простой парсер для разрешенных тегов
-  const parseHTML = (text: string) => {
-    const tagRegex = /<(\/?)(a|code|i|strong)([^>]*)>(.*?)<\/\2>/g;
-    const parts = [];
-    let lastIndex = 0;
-    let match;
+  // Мемоизируем парсинг HTML для оптимизации производительности
+  const parsedContent = useMemo(() => {
+    // Простой парсер для разрешенных тегов
+    const parseHTML = (text: string) => {
+      const tagRegex = /<(\/?)(a|code|i|strong)([^>]*)>(.*?)<\/\2>/g;
+      const parts = [];
+      let lastIndex = 0;
+      let match;
 
-    while ((match = tagRegex.exec(text)) !== null) {
-      const [fullMatch, isClosing, tagName, attributes, content] = match;
-      
-      if (isClosing) continue; // Пропускаем закрывающие теги
-      
-      // Добавляем текст до тега
-      if (match.index > lastIndex) {
-        parts.push(text.slice(lastIndex, match.index));
+      while ((match = tagRegex.exec(text)) !== null) {
+        const [fullMatch, isClosing, tagName, attributes, content] = match;
+        
+        if (isClosing) continue; // Пропускаем закрывающие теги
+        
+        // Добавляем текст до тега
+        if (match.index > lastIndex) {
+          parts.push(text.slice(lastIndex, match.index));
+        }
+
+        // Парсим атрибуты для тега <a>
+        let props: any = {};
+        if (tagName === 'a') {
+          const hrefMatch = attributes.match(/href="([^"]*)"/);
+          const titleMatch = attributes.match(/title="([^"]*)"/);
+          if (hrefMatch) props.href = hrefMatch[1];
+          if (titleMatch) props.title = titleMatch[1];
+        }
+
+        // Рендерим тег
+        const TagComponent = allowedTags[tagName as keyof typeof allowedTags];
+        if (TagComponent) {
+          parts.push(TagComponent(props, content));
+        } else {
+          parts.push(content); // Если тег не разрешен, показываем только содержимое
+        }
+
+        lastIndex = match.index + fullMatch.length;
       }
 
-      // Парсим атрибуты для тега <a>
-      let props: any = {};
-      if (tagName === 'a') {
-        const hrefMatch = attributes.match(/href="([^"]*)"/);
-        const titleMatch = attributes.match(/title="([^"]*)"/);
-        if (hrefMatch) props.href = hrefMatch[1];
-        if (titleMatch) props.title = titleMatch[1];
+      // Добавляем оставшийся текст
+      if (lastIndex < text.length) {
+        parts.push(text.slice(lastIndex));
       }
 
-      // Рендерим тег
-      const TagComponent = allowedTags[tagName as keyof typeof allowedTags];
-      if (TagComponent) {
-        parts.push(TagComponent(props, content));
-      } else {
-        parts.push(content); // Если тег не разрешен, показываем только содержимое
-      }
+      return parts.length > 0 ? parts : [text];
+    };
 
-      lastIndex = match.index + fullMatch.length;
-    }
+    return parseHTML(content);
+  }, [content]);
 
-    // Добавляем оставшийся текст
-    if (lastIndex < text.length) {
-      parts.push(text.slice(lastIndex));
-    }
-
-    return parts.length > 0 ? parts : [text];
-  };
-
-  return <>{parseHTML(content)}</>;
+  return <>{parsedContent}</>;
 };

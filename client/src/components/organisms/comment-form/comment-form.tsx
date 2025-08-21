@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { Box, Typography, Alert } from '@mui/material';
 import { FormField } from '@/components/molecules/form-field';
 import { HTMLToolbar } from '@/components/molecules/html-toolbar';
@@ -23,7 +23,8 @@ export const CommentForm: React.FC<CommentFormProps> = ({
 
   const CAPTCHA_CHALLENGE = 'ABC123';
 
-  const validateForm = (): boolean => {
+  // Мемоизируем валидацию формы
+  const validateForm = useCallback((): boolean => {
     const newErrors: Partial<CommentFormData> = {};
 
     if (!formData.author.trim()) {
@@ -56,23 +57,26 @@ export const CommentForm: React.FC<CommentFormProps> = ({
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  };
+  }, [formData]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Мемоизируем обработчик отправки формы
+  const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
       onSubmit(formData);
     }
-  };
+  }, [validateForm, onSubmit, formData]);
 
-  const handleInputChange = (field: keyof CommentFormData) => (value: string) => {
+  // Мемоизируем обработчик изменения полей
+  const handleInputChange = useCallback((field: keyof CommentFormData) => (value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: undefined }));
     }
-  };
+  }, [errors]);
 
-  const insertHTMLTag = (tag: string) => {
+  // Мемоизируем обработчик вставки HTML тегов
+  const insertHTMLTag = useCallback((tag: string) => {
     const textField = document.querySelector('textarea[name="content"]') as HTMLTextAreaElement;
     if (!textField) return;
 
@@ -115,19 +119,20 @@ export const CommentForm: React.FC<CommentFormProps> = ({
         textField.setSelectionRange(newCursorPos, newCursorPos);
       }
     }, 0);
-  };
+  }, [formData.content]);
 
-  const getFormTitle = () => {
+  // Мемоизируем заголовок формы
+  const formTitle = useMemo(() => {
     if (replyToComment) {
       return `Ответить на комментарий от ${replyToComment.author}`;
     }
     return 'Добавить комментарий';
-  };
+  }, [replyToComment]);
 
   return (
     <Box component="form" onSubmit={handleSubmit}>
       <Typography variant="h5" component="h2" gutterBottom>
-        {getFormTitle()}
+        {formTitle}
       </Typography>
 
       {replyToComment && (

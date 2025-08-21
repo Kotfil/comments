@@ -14,6 +14,7 @@ export * from './molecules/comment-content';
 export * from './molecules/html-renderer';
 export * from './molecules/user-info';
 export * from './molecules/action-buttons';
+export * from './molecules/pagination';
 
 // Organisms - сложные компоненты
 export * from './organisms/comment-item';

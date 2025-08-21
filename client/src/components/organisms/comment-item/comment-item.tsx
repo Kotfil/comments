@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Box } from '@mui/material';
 import { CommentHeader } from '@/components/molecules/comment-header';
 import { CommentContent } from '@/components/molecules/comment-content';
@@ -10,15 +10,18 @@ export const CommentItem: React.FC<CommentItemProps> = ({
   onReply,
   onAction,
 }) => {
-  const handleReply = () => {
+  // Мемоизируем обработчик ответа
+  const handleReply = useCallback(() => {
     onReply?.(comment);
-  };
+  }, [onReply, comment]);
 
-  const handleAction = (action: string) => {
+  // Мемоизируем обработчик действий
+  const handleAction = useCallback((action: string) => {
     onAction?.(action, comment);
-  };
+  }, [onAction, comment]);
 
-  const handleHomepageClick = () => {
+  // Мемоизируем обработчик клика по HomePage
+  const handleHomepageClick = useCallback(() => {
     if (comment.homepage && level === 0) {
       // Если это относительный путь, переходим на страницу комментария
       if (comment.homepage.startsWith('http')) {
@@ -28,7 +31,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
         window.location.href = `/${comment.homepage}`;
       }
     }
-  };
+  }, [comment.homepage, level]);
 
   return (
     <Box
