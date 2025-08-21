@@ -1,19 +1,7 @@
 'use client';
 
-import React from 'react';
-import { HierarchicalComments } from '@/components/HierarchicalComments';
-import { PageContainer, PageTitle, PageDescription } from './page.styles';
+import { HierarchicalCommentsPage } from '@/components/pages/hierarchical-comments-page';
 
-export default function HomePage() {
-  return (
-    <PageContainer>
-      <PageTitle>💬 Система комментариев</PageTitle>
-      <PageDescription>
-        Добро пожаловать в приложение для управления комментариями. 
-        Здесь вы можете просматривать иерархические комментарии с вложенностью.
-      </PageDescription>
-      
-      <HierarchicalComments />
-    </PageContainer>
-  );
+export default function Home() {
+  return <HierarchicalCommentsPage />;
 }
