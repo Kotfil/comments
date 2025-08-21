@@ -209,3 +209,5 @@ export const CommentForm: React.FC<CommentFormProps> = ({
     </Box>
   );
 };
+
+export type { CommentFormProps, CommentFormData };

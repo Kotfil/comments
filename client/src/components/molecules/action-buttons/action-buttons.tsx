@@ -50,3 +50,5 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
     </ActionButtonsContainer>
   );
 };
+
+export type { ActionButtonsProps };

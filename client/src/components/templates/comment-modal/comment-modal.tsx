@@ -48,3 +48,5 @@ export const CommentModal: React.FC<CommentModalProps> = ({
     </Modal>
   );
 };
+
+export type { CommentModalProps };

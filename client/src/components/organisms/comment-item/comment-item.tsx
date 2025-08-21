@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import { Comment } from '@/data/mock-comments';
 import { CommentHeader } from '@/components/molecules/comment-header';
 import { CommentContent } from '@/components/molecules/comment-content';
 import { CommentItemProps } from './comment-item.types';
@@ -67,3 +66,5 @@ export const CommentItem: React.FC<CommentItemProps> = ({
     </Box>
   );
 };
+
+export type { CommentItemProps };

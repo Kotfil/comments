@@ -58,3 +58,5 @@ export const CommentCard: React.FC<CommentCardProps> = ({
     </StyledCommentCard>
   );
 };
+
+export type { CommentCardProps };

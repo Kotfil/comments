@@ -25,3 +25,5 @@ export const UserInfo: React.FC<UserInfoProps> = ({
     </UserInfoContainer>
   );
 };
+
+export type { UserInfoProps };

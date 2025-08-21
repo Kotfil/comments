@@ -18,3 +18,5 @@ export const Typography: React.FC<TypographyProps> = ({
     </MuiTypography>
   );
 };
+
+export type { TypographyProps };

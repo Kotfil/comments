@@ -32,3 +32,5 @@ export const CommentsLayout: React.FC<CommentsLayoutProps> = ({
     </StyledContainer>
   );
 };
+
+export type { CommentsLayoutProps };

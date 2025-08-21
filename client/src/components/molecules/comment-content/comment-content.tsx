@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box, Typography, Button } from '@mui/material';
-import { HTMLRenderer } from '@/components/molecules/html-renderer';
 import { CommentContentProps } from './comment-content.types';
 
 export const CommentContent: React.FC<CommentContentProps> = ({
@@ -10,7 +9,7 @@ export const CommentContent: React.FC<CommentContentProps> = ({
   return (
     <Box sx={{ mb: 2 }}>
       <Typography variant="body2" sx={{ mb: 1 }}>
-        <HTMLRenderer content={content} />
+        {content}
       </Typography>
       
       {onReply && (
@@ -26,3 +25,5 @@ export const CommentContent: React.FC<CommentContentProps> = ({
     </Box>
   );
 };
+
+export type { CommentContentProps };

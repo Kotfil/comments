@@ -123,3 +123,5 @@ export const CommentsPage: React.FC<CommentsPageProps> = ({ onAddComment }) => {
     </Box>
   );
 };
+
+export type { CommentsPageProps };

@@ -114,3 +114,5 @@ export const HierarchicalCommentsPage: React.FC<HierarchicalCommentsPageProps> =
     </CommentsLayout>
   );
 };
+
+export type { HierarchicalCommentsPageProps };
