@@ -119,23 +119,25 @@ export const AddCommentModal: React.FC<AddCommentModalProps> = ({
     let match;
     
     while ((match = tagRegex.exec(content)) !== null) {
+      const isClosing = match[0].startsWith('</');
       const tagName = match[1].toLowerCase();
+      const attributes = match[2];
       
       // Проверяем, разрешен ли тег
       if (!allowedTags.includes(tagName)) {
         return false;
       }
       
-      // Для тега <a> проверяем атрибуты
-      if (tagName === 'a') {
-        const attributes = match[2];
+      // Для открывающего тега <a> проверяем атрибуты
+      if (tagName === 'a' && !isClosing) {
         const hrefMatch = attributes.match(/href\s*=\s*["']([^"']*)["']/);
-        const titleMatch = attributes.match(/title\s*=\s*["']([^"']*)["']/);
         
         // Проверяем, что href присутствует и является валидным URL
         if (!hrefMatch || !/^https?:\/\/.+/.test(hrefMatch[1])) {
           return false;
         }
+        
+        // title атрибут необязательный, поэтому не проверяем его наличие
       }
     }
     

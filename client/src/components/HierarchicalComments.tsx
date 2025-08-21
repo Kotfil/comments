@@ -196,10 +196,6 @@ export const HierarchicalComments: React.FC<HierarchicalCommentsProps> = ({ onAd
             </UserInfo>
             <ActionIcons>
               <IconButton>#</IconButton>
-              <IconButton>🔖</IconButton>
-              <IconButton>⬆️</IconButton>
-              <IconButton>⬇️</IconButton>
-              <IconButton>🔄</IconButton>
               <VoteCounter>
                 ↑{comment.likes}↓{comment.dislikes}
               </VoteCounter>
