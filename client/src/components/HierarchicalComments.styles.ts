@@ -42,12 +42,13 @@ export const CommentBlock = styled.div<CommentBlockProps>`
   background-color: white;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  padding: 16px;
+  padding: 0;
   margin-bottom: 16px;
   margin-left: ${({ level }) => level * 40}px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   position: relative;
   z-index: 2;
+  overflow: hidden;
   
   .replies {
     margin-top: 16px;
@@ -57,8 +58,10 @@ export const CommentBlock = styled.div<CommentBlockProps>`
 export const CommentHeader = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 12px;
+  padding: 16px;
   gap: 12px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e5e7eb;
 `;
 
 export const Avatar = styled.div`
@@ -75,7 +78,8 @@ export const Avatar = styled.div`
 
 export const UserInfo = styled.div`
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 8px;
   flex: 1;
 `;
 
@@ -109,7 +113,7 @@ export const IconButton = styled.button`
   transition: all 0.2s ease;
   
   &:hover {
-    background-color: #f3f4f6;
+    background-color: #e9ecef;
     color: #374151;
   }
 `;
@@ -122,7 +126,8 @@ export const VoteCounter = styled.span`
 `;
 
 export const CommentContent = styled.div`
-  margin-bottom: 12px;
+  padding: 16px;
+  margin-bottom: 0;
 `;
 
 export const CommentText = styled.p`

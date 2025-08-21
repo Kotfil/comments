@@ -5,19 +5,16 @@ import {
   Typography,
   TextField,
   Button,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  FormHelperText,
   Alert,
 } from '@mui/material';
+import { Comment } from '@/data/mock-comments';
 import { AddCommentModalContainer, ModalContent, FormSection } from './AddCommentModal.styles';
 
 interface AddCommentModalProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (commentData: CommentFormData) => void;
+  replyToComment?: Comment | null;
 }
 
 interface CommentFormData {
@@ -42,6 +39,7 @@ export const AddCommentModal: React.FC<AddCommentModalProps> = ({
   open,
   onClose,
   onSubmit,
+  replyToComment,
 }) => {
   const [formData, setFormData] = useState<CommentFormData>({
     author: '',
@@ -129,6 +127,13 @@ export const AddCommentModal: React.FC<AddCommentModalProps> = ({
     }
   };
 
+  const getModalTitle = () => {
+    if (replyToComment) {
+      return `Ответить на комментарий от ${replyToComment.author}`;
+    }
+    return 'Добавить комментарий';
+  };
+
   return (
     <Modal
       open={open}
@@ -139,8 +144,16 @@ export const AddCommentModal: React.FC<AddCommentModalProps> = ({
       <AddCommentModalContainer>
         <ModalContent>
           <Typography variant="h5" component="h2" gutterBottom>
-            Добавить комментарий
+            {getModalTitle()}
           </Typography>
+
+          {replyToComment && (
+            <Alert severity="info" sx={{ mb: 2 }}>
+              <Typography variant="body2">
+                <strong>Ответ на:</strong> {replyToComment.content}
+              </Typography>
+            </Alert>
+          )}
 
           <form onSubmit={handleSubmit}>
             <FormSection>
@@ -222,7 +235,7 @@ export const AddCommentModal: React.FC<AddCommentModalProps> = ({
                 Отмена
               </Button>
               <Button type="submit" variant="contained" color="primary">
-                Добавить комментарий
+                {replyToComment ? 'Добавить ответ' : 'Добавить комментарий'}
               </Button>
             </Box>
           </form>

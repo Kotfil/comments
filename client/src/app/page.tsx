@@ -1,17 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Button, Box } from '@mui/material';
+import { Button } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
-import { CommentsTable } from '@/components/CommentsTable';
 import { AddCommentModal } from '@/components/AddCommentModal';
 import { HierarchicalComments } from '@/components/HierarchicalComments';
-import { getMainComments } from '@/data/mock-comments';
 import { PageContainer, PageTitle, PageDescription, AddButtonContainer } from './page.styles';
 
 export default function HomePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const mainComments = getMainComments();
 
   const handleAddComment = (commentData: any) => {
     // Здесь будет логика добавления комментария
@@ -38,8 +35,6 @@ export default function HomePage() {
         </Button>
       </AddButtonContainer>
 
-      <CommentsTable comments={mainComments} />
-      
       <HierarchicalComments />
       
       <AddCommentModal
