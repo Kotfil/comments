@@ -20,6 +20,12 @@ export const CommentCard: React.FC<CommentCardProps> = ({
     onAction?.(action, comment);
   };
 
+  const handleHomepageClick = () => {
+    if (comment.homepage && level === 0) {
+      window.open(comment.homepage, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   return (
     <StyledCommentCard level={level}>
       <CommentCardHeader>
@@ -40,6 +46,23 @@ export const CommentCard: React.FC<CommentCardProps> = ({
         content={comment.content}
         onReply={handleReply}
       />
+
+      {/* Показываем HomePage только для основных комментариев */}
+      {level === 0 && comment.homepage && (
+        <div 
+          style={{ 
+            marginTop: '8px', 
+            cursor: 'pointer',
+            color: '#1976d2',
+            textDecoration: 'underline',
+            fontSize: '0.875rem'
+          }}
+          onClick={handleHomepageClick}
+          title="Кликните для перехода по ссылке"
+        >
+          🌐 {comment.homepage}
+        </div>
+      )}
       
       {/* Рекурсивно рендерим ответы */}
       {comment.replies.length > 0 && (

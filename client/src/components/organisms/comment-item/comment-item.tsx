@@ -18,6 +18,12 @@ export const CommentItem: React.FC<CommentItemProps> = ({
     onAction?.(action, comment);
   };
 
+  const handleHomepageClick = () => {
+    if (comment.homepage && level === 0) {
+      window.open(comment.homepage, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -48,6 +54,26 @@ export const CommentItem: React.FC<CommentItemProps> = ({
         content={comment.content}
         onReply={handleReply}
       />
+
+      {/* Показываем HomePage только для основных комментариев */}
+      {level === 0 && comment.homepage && (
+        <Box 
+          sx={{ 
+            mt: 1, 
+            cursor: 'pointer',
+            color: 'primary.main',
+            textDecoration: 'underline',
+            fontSize: '0.875rem',
+            '&:hover': {
+              color: 'primary.dark',
+            }
+          }}
+          onClick={handleHomepageClick}
+          title="Кликните для перехода по ссылке"
+        >
+          🌐 {comment.homepage}
+        </Box>
+      )}
       
       {/* Рекурсивно рендерим ответы */}
       {comment.replies.length > 0 && (

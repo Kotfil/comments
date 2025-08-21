@@ -159,15 +159,18 @@ export const CommentForm: React.FC<CommentFormProps> = ({
         required
       />
 
-      <FormField
-        label="Home page"
-        name="homepage"
-        value={formData.homepage || ''}
-        onChange={handleInputChange('homepage')}
-        error={errors.homepage}
-        helperText="Необязательное поле (формат URL)"
-        placeholder="https://example.com"
-      />
+      {/* Показываем поле HomePage только для основных комментариев */}
+      {!replyToComment && (
+        <FormField
+          label="Home page"
+          name="homepage"
+          value={formData.homepage || ''}
+          onChange={handleInputChange('homepage')}
+          error={errors.homepage}
+          helperText="Необязательное поле (формат URL)"
+          placeholder="https://example.com"
+        />
+      )}
 
       <FormField
         label="Текст комментария"
