@@ -1,0 +1,20 @@
+{
+  "name": "comments-app",
+  "version": "1.0.0",
+  "description": "Full-stack comments application with hierarchical structure",
+  "private": true,
+  "workspaces": [
+    "client"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=client",
+    "dev:client": "npm run dev --workspace=client",
+    "build": "npm run build --workspace=client",
+    "start": "npm run start --workspace=client",
+    "lint": "npm run lint --workspace=client",
+    "format": "npm run format --workspace=client"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}

@@ -1,118 +1,93 @@
-# --- Node / Package managers ---
+# Dependencies
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
 
-# lockfiles are usually committed; uncomment to ignore a specific one
-# package-lock.json
-# yarn.lock
-# pnpm-lock.yaml
-
-# --- Env files (keep secrets out of VCS) ---
-.env
-.env.*
-!.env.example
-!.env.sample
-
-# --- TypeScript ---
-*.tsbuildinfo
-
-# --- Build outputs / bundlers ---
+# Production builds
 dist/
 build/
-out/
-.storybook-out/
-storybook-static/
-
-# Vite / Rollup / Parcel
-dist-ssr/
-.cache/
-.parcel-cache/
-
-# --- Test / Coverage ---
-coverage/
-.nyc_output/
-.tap/
-test-output/
-jest-html-reporters-*/ 
-
-# Cypress / Playwright
-cypress/videos/
-cypress/screenshots/
-test-results/
-playwright-report/
-trace.zip
-
-# --- Next.js / Vercel / Turborepo ---
 .next/
-.next.cache/
-.vercel/
-.turbo/
-.output/
+out/
 
-# --- NestJS ---
-# (Nest builds to dist/ already covered above)
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# --- Framework caches (general) ---
-.eslintcache
-.stylelintcache
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
 
-# --- Logs ---
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
 logs/
 *.log
-*.log.*
-log/
+
+# Runtime data
 pids/
 *.pid
 *.seed
+*.pid.lock
 
-# --- OS junk ---
-.DS_Store
-.DS_Store?
-Thumbs.db
-ehthumbs.db
-Icon?
-$RECYCLE.BIN/
+# Coverage directory used by tools like istanbul
+coverage/
 
-# --- Editors / IDEs ---
-.vscode/*
-.cursorrules
-!.vscode/settings.json
-!.vscode/extensions.json
-!.vscode/tasks.json
-!.vscode/launch.json
-.idea/
-*.iml
+# nyc test coverage
+.nyc_output/
 
-# --- Images / design tools ---
-*.sketch
-*.fig
-*.psd
+# Dependency directories
+jspm_packages/
 
-# --- Databases (local dev) ---
-*.sqlite
-*.sqlite3
-*.db
-*.db-journal
+# Optional npm cache directory
+.npm
 
-# --- Misc caches ---
-*.swp
-*.swo
-*.orig
-*.cache
-.cache-loader/
+# Optional eslint cache
+.eslintcache
 
-# --- Package manager stores (rarely inside repo, but safe to ignore) ---
-.pnpm-store/
-.npm/
-.yarn/*
-!.yarn/releases
-!.yarn/plugins
-!.yarn/sdks
-!.yarn/versions
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
 
-# --- Docker ---
-docker-data/
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# next.js build output
+.next
+
+# nuxt.js build output
+.nuxt
+
+# vuepress build output
+.vuepress/dist
+
+# Serverless directories
+.serverless/
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# TernJS port file
+.tern-port
