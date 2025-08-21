@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Button } from '@mui/material';
+import { Add as AddIcon } from '@mui/icons-material';
 import { Comment } from '@/data/mock-comments';
 import { mockComments } from '@/data/mock-comments';
 import { AddCommentModal } from './AddCommentModal';
@@ -19,9 +21,14 @@ import {
   VerticalLine,
   CommentWrapper,
   HierarchicalTitle,
+  TitleContainer,
 } from './HierarchicalComments.styles';
 
-export const HierarchicalComments: React.FC = () => {
+interface HierarchicalCommentsProps {
+  onAddComment?: (commentData: any) => void;
+}
+
+export const HierarchicalComments: React.FC<HierarchicalCommentsProps> = ({ onAddComment }) => {
   const [comments, setComments] = useState<Comment[]>(mockComments);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [replyToComment, setReplyToComment] = useState<Comment | null>(null);
@@ -73,12 +80,22 @@ export const HierarchicalComments: React.FC = () => {
       setComments([newComment, ...comments]);
     }
 
+    // Если передан внешний обработчик, вызываем его
+    if (onAddComment) {
+      onAddComment(commentData);
+    }
+
     setReplyToComment(null);
     setIsModalOpen(false);
   };
 
   const handleReplyClick = (comment: Comment) => {
     setReplyToComment(comment);
+    setIsModalOpen(true);
+  };
+
+  const handleAddMainComment = () => {
+    setReplyToComment(null);
     setIsModalOpen(true);
   };
 
@@ -128,7 +145,18 @@ export const HierarchicalComments: React.FC = () => {
 
   return (
     <HierarchicalContainer>
-      <HierarchicalTitle variant="h6">Иерархические комментарии</HierarchicalTitle>
+      <TitleContainer>
+        <HierarchicalTitle variant="h6">Иерархические комментарии</HierarchicalTitle>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={handleAddMainComment}
+          size="medium"
+        >
+          Добавить комментарий
+        </Button>
+      </TitleContainer>
+      
       {comments.map((comment) => renderComment(comment))}
       
       <AddCommentModal

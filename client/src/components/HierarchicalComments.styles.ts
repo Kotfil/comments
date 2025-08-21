@@ -14,12 +14,19 @@ export const HierarchicalContainer = styled.div`
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 `;
 
-export const HierarchicalTitle = styled(Typography)`
+export const TitleContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 24px;
   padding-bottom: 12px;
   border-bottom: 2px solid #e5e7eb;
+`;
+
+export const HierarchicalTitle = styled(Typography)`
   font-weight: 600;
   color: #111827;
+  margin: 0;
 `;
 
 export const CommentWrapper = styled.div`
