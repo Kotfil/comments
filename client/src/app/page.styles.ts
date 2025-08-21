@@ -24,3 +24,9 @@ export const PageDescription = styled.p`
   margin-left: auto;
   margin-right: auto;
 `;
+
+export const AddButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+`;
