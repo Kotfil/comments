@@ -15,7 +15,6 @@ export { CommentContent } from './molecules/comment-content';
 export { UserInfo } from './molecules/user-info';
 export { ActionButtons } from './molecules/action-buttons';
 
-
 // Organisms - сложные компоненты
 export { CommentItem } from './organisms/comment-item';
 export { CommentForm } from './organisms/comment-form';

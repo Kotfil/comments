@@ -182,8 +182,6 @@ export const HierarchicalCommentsPage: React.FC<
     console.log(`Action: ${action} on comment:`, comment);
   }, []);
 
-
-
   // Информация о пагинации
   const paginationInfo = useMemo(
     () => ({
@@ -233,7 +231,6 @@ export const HierarchicalCommentsPage: React.FC<
       onAddComment={handleAddMainComment}
     >
       {/* Управление polling */}
-
 
       {/* Информация о пагинации */}
       <div

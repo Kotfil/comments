@@ -17,7 +17,7 @@ const httpLink = createHttpLink({
 });
 
 // Линк для защиты от XSS и валидации данных
-const securityLink = new ApolloLink((operation, forward) => {
+const securityLink = new ApolloLink((operation: any, forward: any) => {
   // Защита от XSS - проверяем и очищаем входные данные
   const sanitizeInput = (obj: any): any => {
     if (typeof obj === 'string') {
@@ -49,52 +49,44 @@ const securityLink = new ApolloLink((operation, forward) => {
 });
 
 // Линк для тротлинга запросов (защита от DDoS)
-const throttleLink = new ApolloLink((operation, forward) => {
+const throttleLink = new ApolloLink((operation: any, forward: any) => {
   // Простой тротлинг - максимум 10 запросов в секунду
   const now = Date.now();
   const key = operation.operationName || 'default';
-  
-  if (!throttleLink['requestCounts']) {
-    throttleLink['requestCounts'] = {};
+
+  // Используем WeakMap для хранения состояния
+  const requestCounts = new Map<string, number>();
+  const lastReset = new Map<string, number>();
+
+  if (!lastReset.has(key) || now - (lastReset.get(key) || 0) > 1000) {
+    lastReset.set(key, now);
+    requestCounts.set(key, 0);
   }
-  
-  if (!throttleLink['lastReset']) {
-    throttleLink['lastReset'] = now;
-  }
-  
-  // Сбрасываем счетчик каждую секунду
-  if (now - throttleLink['lastReset'] > 1000) {
-    throttleLink['requestCounts'] = {};
-    throttleLink['lastReset'] = now;
-  }
-  
-  // Проверяем лимит
-  if (!throttleLink['requestCounts'][key]) {
-    throttleLink['requestCounts'][key] = 0;
-  }
-  
-  if (throttleLink['requestCounts'][key] >= 10) {
+
+  const currentCount = requestCounts.get(key) || 0;
+
+  if (currentCount >= 10) {
     throw new Error('Rate limit exceeded. Too many requests.');
   }
-  
-  throttleLink['requestCounts'][key]++;
-  
+
+  requestCounts.set(key, currentCount + 1);
+
   return forward(operation);
 });
 
 // Линк для тайминга запросов
-const timingLink = new ApolloLink((operation, forward) => {
+const timingLink = new ApolloLink((operation: any, forward: any) => {
   const startTime = Date.now();
-  
-  return forward(operation).map((result) => {
+
+  return forward(operation).map((result: any) => {
     const endTime = Date.now();
     const duration = endTime - startTime;
-    
+
     // Логируем медленные запросы (>1 секунды)
     if (duration > 1000) {
       console.warn(`Slow query: ${operation.operationName} took ${duration}ms`);
     }
-    
+
     return result;
   });
 });
@@ -110,7 +102,7 @@ const errorLink = onError(({ graphQLErrors, networkError, operation }) => {
       );
     });
   }
-  
+
   if (networkError) {
     console.error(`Network error: ${networkError.message}`);
   }
@@ -135,7 +127,14 @@ let client: ApolloClient | null = null;
 
 if (isClient) {
   client = new ApolloClient({
-    link: from([securityLink, throttleLink, timingLink, errorLink, authLink, httpLink]),
+    link: from([
+      securityLink,
+      throttleLink,
+      timingLink,
+      errorLink,
+      authLink,
+      httpLink,
+    ]),
     cache: new InMemoryCache({
       typePolicies: {
         Query: {

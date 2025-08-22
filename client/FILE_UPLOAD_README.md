@@ -7,6 +7,7 @@
 ## Компоненты
 
 ### FileUpload
+
 - **Путь**: `src/components/molecules/file-upload/`
 - **Назначение**: Компонент для выбора и загрузки файлов
 - **Особенности**:
@@ -17,6 +18,7 @@
   - Возможность удаления файлов
 
 ### AttachedFiles
+
 - **Путь**: `src/components/molecules/attached-files/`
 - **Назначение**: Отображение прикрепленных файлов в комментариях
 - **Особенности**:
@@ -28,6 +30,7 @@
 ## Утилиты
 
 ### file-utils.ts
+
 - **Путь**: `src/lib/file-utils.ts`
 - **Функции**:
   - `convertFileToBase64()` - конвертация файла в base64
@@ -40,6 +43,7 @@
 ## Хуки
 
 ### useFileUpload
+
 - **Путь**: `src/hooks/use-file-upload.ts`
 - **Функциональность**:
   - Управление состоянием загруженных файлов
@@ -50,11 +54,13 @@
 ## Интеграция
 
 ### CommentForm
+
 - Компонент `FileUpload` интегрирован в форму создания комментариев
 - Показывается только для основных комментариев (не для ответов)
 - Файлы добавляются в `CommentFormData`
 
 ### CommentItem
+
 - Компонент `AttachedFiles` отображает прикрепленные файлы
 - Файлы показываются только для основных комментариев (level === 0)
 - Поддерживается предварительный просмотр и скачивание
@@ -62,6 +68,7 @@
 ## Типы данных
 
 ### UploadedFile
+
 ```typescript
 interface UploadedFile {
   id: string;
@@ -73,6 +80,7 @@ interface UploadedFile {
 ```
 
 ### FileData
+
 ```typescript
 interface FileData {
   name: string;
@@ -92,6 +100,7 @@ interface FileData {
 ## Использование
 
 ### В форме комментария
+
 ```tsx
 <FileUpload
   onFilesChange={handleFilesChange}
@@ -103,11 +112,9 @@ interface FileData {
 ```
 
 ### В отображении комментария
+
 ```tsx
-<AttachedFiles 
-  files={comment.files}
-  onDownload={handleFileDownload}
-/>
+<AttachedFiles files={comment.files} onDownload={handleFileDownload} />
 ```
 
 ## Безопасность
