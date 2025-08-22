@@ -3,12 +3,16 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ScheduleModule } from '@nestjs/schedule';
 import { CommentsModule } from './modules/comments.module';
+import { SecurityModule } from './modules/security/security.module';
+import { CleanupService } from './services/cleanup.service';
+import { CleanupController } from './controllers/cleanup.controller';
 import { getTypeOrmConfig } from './config/typeorm.config';
 
 @Module({
   imports: [
-    // Конфигурация
+    // Configuration
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
@@ -29,12 +33,14 @@ import { getTypeOrmConfig } from './config/typeorm.config';
       introspection: true,
     }),
 
+    // Schedule module for cron jobs
+    ScheduleModule.forRoot(),
 
-
-    // Модули приложения
+    // Application modules
+    SecurityModule,
     CommentsModule,
   ],
-  controllers: [],
-  providers: [],
+  controllers: [CleanupController],
+  providers: [CleanupService],
 })
 export class AppModule {}

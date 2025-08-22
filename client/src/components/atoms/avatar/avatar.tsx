@@ -2,6 +2,8 @@ import React from 'react';
 import { AvatarProps } from './avatar.types';
 import { StyledAvatar } from './avatar.styles';
 
+export type { AvatarProps };
+
 export const Avatar: React.FC<AvatarProps> = ({
   children,
   size = 'medium',

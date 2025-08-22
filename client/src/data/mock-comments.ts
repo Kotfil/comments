@@ -6,7 +6,7 @@ export interface Comment {
   avatar: string;
   content: string;
   timestamp: string;
-  replies: Comment[];
+  replies?: Comment[];
   level: number;
 }
 

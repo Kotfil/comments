@@ -1,12 +1,12 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { useQuery, useMutation } from '@apollo/client/react';
+import { useQuery, useMutation } from '@apollo/client';
 import { Comment, CreateCommentDto, CreateReplyDto } from '@/graphql/types';
 import { GET_COMMENTS, CREATE_COMMENT, CREATE_REPLY } from '@/graphql/schema';
 import { CommentsLayout } from '@/components/templates/comments-layout';
 import { CommentCard } from '@/components/organisms/comment-card';
 import { CommentModal } from '@/components/templates/comment-modal';
 import { ProcessedCommentFormData } from '@/components/organisms/comment-form';
-import { PollingControl } from '@/components/molecules/polling-control';
+
 import { HierarchicalCommentsPageProps } from './hierarchical-comments-page.types';
 import { Box, CircularProgress, Alert } from '@mui/material';
 
@@ -16,17 +16,13 @@ export const HierarchicalCommentsPage: React.FC<
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [replyToComment, setReplyToComment] = useState<Comment | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pollInterval, setPollInterval] = useState(30000); // 30 секунд по умолчанию
+
   const commentsPerPage = 25;
 
   // GraphQL хуки
-  const { data, loading, error, refetch, startPolling, stopPolling } = useQuery(
-    GET_COMMENTS,
-    {
-      pollInterval: pollInterval,
-      errorPolicy: 'all',
-    }
-  );
+  const { data, loading, error, refetch } = useQuery(GET_COMMENTS, {
+    errorPolicy: 'all',
+  });
 
   const [createComment, { loading: createLoading, error: createError }] =
     useMutation(CREATE_COMMENT, {
@@ -40,7 +36,7 @@ export const HierarchicalCommentsPage: React.FC<
       errorPolicy: 'all',
     });
 
-  const comments = data?.comments || [];
+  const comments = (data as any)?.comments || [];
 
   // Отложенное значение для оптимизации рендеринга больших списков
   const deferredComments = useMemo(() => comments, [comments]);
@@ -83,6 +79,35 @@ export const HierarchicalCommentsPage: React.FC<
 
           await createReply({
             variables: { input: replyInput },
+            update: (cache, { data }: any) => {
+              if (data?.createReply) {
+                // Обновляем кэш для родительского комментария
+                const existingComments = cache.readQuery({
+                  query: GET_COMMENTS,
+                }) as any;
+                if (existingComments) {
+                  cache.writeQuery({
+                    query: GET_COMMENTS,
+                    data: {
+                      comments: existingComments.comments.map(
+                        (comment: any) => {
+                          if (comment.id === replyToComment.id) {
+                            return {
+                              ...comment,
+                              replies: [
+                                ...(comment.replies || []),
+                                data.createReply,
+                              ],
+                            };
+                          }
+                          return comment;
+                        }
+                      ),
+                    },
+                  });
+                }
+              }
+            },
           });
         } else {
           // Создаем новый основной комментарий
@@ -95,6 +120,25 @@ export const HierarchicalCommentsPage: React.FC<
 
           await createComment({
             variables: { input: commentInput },
+            update: (cache, { data }: any) => {
+              if (data?.createComment) {
+                // Добавляем новый комментарий в начало списка
+                const existingComments = cache.readQuery({
+                  query: GET_COMMENTS,
+                }) as any;
+                if (existingComments) {
+                  cache.writeQuery({
+                    query: GET_COMMENTS,
+                    data: {
+                      comments: [
+                        data.createComment,
+                        ...existingComments.comments,
+                      ],
+                    },
+                  });
+                }
+              }
+            },
           });
 
           // Сбрасываем на первую страницу при добавлении нового комментария
@@ -138,18 +182,7 @@ export const HierarchicalCommentsPage: React.FC<
     console.log(`Action: ${action} on comment:`, comment);
   }, []);
 
-  // Обработчики для PollingControl
-  const handleStartPolling = useCallback(() => {
-    startPolling(pollInterval);
-  }, [startPolling, pollInterval]);
 
-  const handleStopPolling = useCallback(() => {
-    stopPolling();
-  }, [stopPolling]);
-
-  const handleIntervalChange = useCallback((interval: number) => {
-    setPollInterval(interval);
-  }, []);
 
   // Информация о пагинации
   const paginationInfo = useMemo(
@@ -200,30 +233,7 @@ export const HierarchicalCommentsPage: React.FC<
       onAddComment={handleAddMainComment}
     >
       {/* Управление polling */}
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        gap={2}
-        sx={{
-          mb: 3,
-          p: 2,
-          backgroundColor: 'grey.50',
-          borderRadius: 2,
-          border: '1px solid',
-          borderColor: 'grey.200',
-        }}
-      >
-        <PollingControl
-          isPolling={true}
-          onStartPolling={handleStartPolling}
-          onStopPolling={handleStopPolling}
-          onRefresh={refetch}
-          pollInterval={pollInterval}
-          onIntervalChange={handleIntervalChange}
-          showStatus={true}
-        />
-      </Box>
+
 
       {/* Информация о пагинации */}
       <div

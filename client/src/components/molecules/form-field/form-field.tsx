@@ -3,6 +3,8 @@ import { Box, Typography, Alert } from '@mui/material';
 import { Input } from '@/components/atoms/input';
 import { FormFieldProps } from './form-field.types';
 
+export type { FormFieldProps };
+
 export const FormField: React.FC<FormFieldProps> = ({
   label,
   name,

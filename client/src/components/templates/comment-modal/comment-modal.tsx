@@ -14,7 +14,7 @@ export const CommentModal: React.FC<CommentModalProps> = ({
   isSubmitting = false,
 }) => {
   const handleSubmit = (data: CommentFormData) => {
-    onSubmit(data);
+    onSubmit(data as any);
     onClose();
   };
 

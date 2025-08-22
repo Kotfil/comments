@@ -24,7 +24,7 @@ export interface ProcessedCommentFormData {
 }
 
 export interface CommentFormProps {
-  onSubmit: (data: ProcessedCommentFormData) => void;
+  onSubmit: (data: any) => void;
   onCancel: () => void;
   replyToComment?: { author: string; content: string } | null;
   isSubmitting?: boolean;

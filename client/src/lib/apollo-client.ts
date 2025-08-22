@@ -3,6 +3,7 @@ import {
   InMemoryCache,
   createHttpLink,
   from,
+  ApolloLink,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
@@ -15,25 +16,105 @@ const httpLink = createHttpLink({
   uri: process.env.NEXT_PUBLIC_GRAPHQL_URL || 'http://localhost:4000/graphql',
 });
 
-// Линк для обработки ошибок
-const errorLink = onError(
-  ({ graphQLErrors, networkError, operation, forward }) => {
-    if (graphQLErrors) {
-      graphQLErrors.forEach(({ message, locations, path }) => {
-        console.error(
-          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-        );
-      });
+// Линк для защиты от XSS и валидации данных
+const securityLink = new ApolloLink((operation, forward) => {
+  // Защита от XSS - проверяем и очищаем входные данные
+  const sanitizeInput = (obj: any): any => {
+    if (typeof obj === 'string') {
+      // Убираем потенциально опасные HTML теги
+      return obj
+        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+        .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '')
+        .replace(/javascript:/gi, '')
+        .replace(/on\w+\s*=/gi, '');
     }
-
-    if (networkError) {
-      console.error(`[Network error]: ${networkError}`);
+    if (typeof obj === 'object' && obj !== null) {
+      const sanitized: any = Array.isArray(obj) ? [] : {};
+      for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          sanitized[key] = sanitizeInput(obj[key]);
+        }
+      }
+      return sanitized;
     }
+    return obj;
+  };
 
-    // Возвращаем операцию для повторной попытки
-    return forward(operation);
+  // Очищаем переменные операции
+  if (operation.variables) {
+    operation.variables = sanitizeInput(operation.variables);
   }
-);
+
+  return forward(operation);
+});
+
+// Линк для тротлинга запросов (защита от DDoS)
+const throttleLink = new ApolloLink((operation, forward) => {
+  // Простой тротлинг - максимум 10 запросов в секунду
+  const now = Date.now();
+  const key = operation.operationName || 'default';
+  
+  if (!throttleLink['requestCounts']) {
+    throttleLink['requestCounts'] = {};
+  }
+  
+  if (!throttleLink['lastReset']) {
+    throttleLink['lastReset'] = now;
+  }
+  
+  // Сбрасываем счетчик каждую секунду
+  if (now - throttleLink['lastReset'] > 1000) {
+    throttleLink['requestCounts'] = {};
+    throttleLink['lastReset'] = now;
+  }
+  
+  // Проверяем лимит
+  if (!throttleLink['requestCounts'][key]) {
+    throttleLink['requestCounts'][key] = 0;
+  }
+  
+  if (throttleLink['requestCounts'][key] >= 10) {
+    throw new Error('Rate limit exceeded. Too many requests.');
+  }
+  
+  throttleLink['requestCounts'][key]++;
+  
+  return forward(operation);
+});
+
+// Линк для тайминга запросов
+const timingLink = new ApolloLink((operation, forward) => {
+  const startTime = Date.now();
+  
+  return forward(operation).map((result) => {
+    const endTime = Date.now();
+    const duration = endTime - startTime;
+    
+    // Логируем медленные запросы (>1 секунды)
+    if (duration > 1000) {
+      console.warn(`Slow query: ${operation.operationName} took ${duration}ms`);
+    }
+    
+    return result;
+  });
+});
+
+// Линк для обработки ошибок с защитой
+const errorLink = onError(({ graphQLErrors, networkError, operation }) => {
+  if (graphQLErrors) {
+    graphQLErrors.forEach(({ message, locations, path }) => {
+      console.error(
+        `GraphQL error: ${message}`,
+        `Location: ${locations}`,
+        `Path: ${path}`
+      );
+    });
+  }
+  
+  if (networkError) {
+    console.error(`Network error: ${networkError.message}`);
+  }
+});
 
 // Линк для добавления заголовков (например, для аутентификации)
 const authLink = setContext((_, { headers }) => {
@@ -50,11 +131,11 @@ const authLink = setContext((_, { headers }) => {
 });
 
 // Создаем Apollo Client только на клиенте
-let client: ApolloClient<any> | null = null;
+let client: ApolloClient | null = null;
 
 if (isClient) {
   client = new ApolloClient({
-    link: from([errorLink, authLink, httpLink]),
+    link: from([securityLink, throttleLink, timingLink, errorLink, authLink, httpLink]),
     cache: new InMemoryCache({
       typePolicies: {
         Query: {
@@ -79,8 +160,8 @@ if (isClient) {
         },
       },
     }),
-    // Настройки для разработки
-    connectToDevTools: process.env.NODE_ENV === 'development',
+    // Настройки для разработки (отключено для совместимости)
+    // connectToDevTools: process.env.NODE_ENV === 'development',
     // Настройки для кэширования
     defaultOptions: {
       watchQuery: {

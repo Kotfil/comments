@@ -8,7 +8,7 @@ export interface Comment {
   content: string;
   timestamp: string;
   level: number;
-  replies: Comment[];
+  replies?: Comment[];
 }
 
 // Входные данные для создания комментария (соответствует CreateCommentDto на сервере)

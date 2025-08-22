@@ -3,7 +3,7 @@ import { ProcessedCommentFormData } from '@/components/organisms/comment-form';
 export interface CommentModalProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (data: ProcessedCommentFormData) => void;
+  onSubmit: (data: any) => void;
   replyToComment?: { author: string; content: string } | null;
   isSubmitting?: boolean;
 }

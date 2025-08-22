@@ -74,7 +74,7 @@ export const CommentCard: React.FC<CommentCardProps> = ({
       )}
 
       {/* Рекурсивно рендерим ответы */}
-      {comment.replies.length > 0 && (
+      {comment.replies && comment.replies.length > 0 && (
         <CommentCardReplies>
           {comment.replies.map((reply) => (
             <CommentCard

@@ -4,6 +4,8 @@ import { FormatItalic, FormatBold, Code, Link } from '@mui/icons-material';
 import { IconButton } from '@/components/atoms/icon-button';
 import { HTMLToolbarProps } from './html-toolbar.types';
 
+export type { HTMLToolbarProps };
+
 export const HTMLToolbar: React.FC<HTMLToolbarProps> = ({ onInsertTag }) => {
   const toolbarItems = [
     { tag: 'i', icon: <FormatItalic />, tooltip: 'Курсив' },

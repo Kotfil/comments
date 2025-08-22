@@ -12,18 +12,26 @@ export class CommentsService {
   ) {}
 
   async findAll(): Promise<Comment[]> {
-    return this.commentsRepository.find({
-      where: { parent_id: null }, // Только основные комментарии
-      relations: ['replies', 'replies.replies'], // Загружаем ответы
-      order: { created_at: 'DESC' },
-    });
+    // Явно загружаем только основные комментарии (parent_id = null)
+    // и их дочерние комментарии через relations
+    return this.commentsRepository
+      .createQueryBuilder('comment')
+      .leftJoinAndSelect('comment.replies', 'replies')
+      .leftJoinAndSelect('replies.replies', 'replies2')
+      .where('comment.parent_id IS NULL')
+      .orderBy('comment.created_at', 'DESC')
+      .addOrderBy('replies.created_at', 'ASC')
+      .addOrderBy('replies2.created_at', 'ASC')
+      .getMany();
   }
 
   async findById(id: string): Promise<Comment> {
-    const comment = await this.commentsRepository.findOne({
-      where: { id },
-      relations: ['replies', 'replies.replies'],
-    });
+    const comment = await this.commentsRepository
+      .createQueryBuilder('comment')
+      .leftJoinAndSelect('comment.replies', 'replies')
+      .leftJoinAndSelect('replies.replies', 'replies2')
+      .where('comment.id = :id', { id })
+      .getOne();
 
     if (!comment) {
       throw new NotFoundException(`Comment with ID ${id} not found`);
@@ -33,10 +41,12 @@ export class CommentsService {
   }
 
   async findByHomepage(homepage: string): Promise<Comment> {
-    const comment = await this.commentsRepository.findOne({
-      where: { homepage },
-      relations: ['replies', 'replies.replies'],
-    });
+    const comment = await this.commentsRepository
+      .createQueryBuilder('comment')
+      .leftJoinAndSelect('comment.replies', 'replies')
+      .leftJoinAndSelect('replies.replies', 'replies2')
+      .where('comment.homepage = :homepage', { homepage })
+      .getOne();
 
     if (!comment) {
       throw new NotFoundException(`Comment with homepage ${homepage} not found`);
@@ -53,22 +63,29 @@ export class CommentsService {
     });
 
     const savedComment = await this.commentsRepository.save(comment);
-    return savedComment;
+    
+    // Возвращаем комментарий с загруженными отношениями
+    return this.findById(savedComment.id);
   }
 
   async createReply(createReplyDto: CreateReplyDto): Promise<Comment> {
     // Проверяем существование родительского комментария
     const parentComment = await this.findById(createReplyDto.parentId);
     
+    // Устанавливаем правильный уровень для дочернего комментария
+    const replyLevel = parentComment.level + 1;
+    
     const reply = this.commentsRepository.create({
       ...createReplyDto,
       parent_id: createReplyDto.parentId,
-      level: parentComment.level + 1,
+      level: replyLevel,
       avatar: '👤',
     });
 
     const savedReply = await this.commentsRepository.save(reply);
-    return savedReply;
+    
+    // Возвращаем комментарий с загруженными отношениями
+    return this.findById(savedReply.id);
   }
 
 

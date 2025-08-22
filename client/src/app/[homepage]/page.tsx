@@ -60,7 +60,7 @@ export default function HomePageComment() {
             Комментарий не найден
           </Typography>
           <Typography variant="body1" color="text.secondary">
-            Комментарий с URL "{homepage}" не существует.
+            Комментарий с URL &quot;{homepage}&quot; не существует.
           </Typography>
         </Box>
       </Container>
@@ -75,7 +75,7 @@ export default function HomePageComment() {
             Комментарий не найден
           </Typography>
           <Typography variant="body1" color="text.secondary">
-            Комментарий с URL "{homepage}" не существует.
+            Комментарий с URL &quot;{homepage}&quot; не существует.
           </Typography>
         </Box>
       </Container>

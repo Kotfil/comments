@@ -4,6 +4,8 @@ import { Avatar } from '@/components/atoms/avatar';
 import { IconButton } from '@/components/atoms/icon-button';
 import { CommentHeaderProps } from './comment-header.types';
 
+export type { CommentHeaderProps };
+
 export const CommentHeader: React.FC<CommentHeaderProps> = ({
   author,
   timestamp,

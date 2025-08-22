@@ -927,7 +927,7 @@
     webpack "5.97.1"
     webpack-node-externals "3.0.0"
 
-"@nestjs/common@^10.0.0", "@nestjs/common@^8.0.0 || ^9.0.0 || ^10.0.0", "@nestjs/common@^9.3.8 || ^10.0.0":
+"@nestjs/common@^10.0.0", "@nestjs/common@^10.0.0 || ^11.0.0", "@nestjs/common@^8.0.0 || ^9.0.0 || ^10.0.0", "@nestjs/common@^9.3.8 || ^10.0.0":
   version "10.4.20"
   resolved "https://registry.npmjs.org/@nestjs/common/-/common-10.4.20.tgz"
   integrity sha512-hxJxZF7jcKGuUzM9EYbuES80Z/36piJbiqmPy86mk8qOn5gglFebBTvcx7PWVbRNSb4gngASYnefBj/Y2HAzpQ==
@@ -946,7 +946,7 @@
     dotenv-expand "10.0.0"
     lodash "4.17.21"
 
-"@nestjs/core@^10.0.0", "@nestjs/core@^8.0.0 || ^9.0.0 || ^10.0.0", "@nestjs/core@^9.3.8 || ^10.0.0":
+"@nestjs/core@^10.0.0", "@nestjs/core@^10.0.0 || ^11.0.0", "@nestjs/core@^8.0.0 || ^9.0.0 || ^10.0.0", "@nestjs/core@^9.3.8 || ^10.0.0":
   version "10.4.20"
   resolved "https://registry.npmjs.org/@nestjs/core/-/core-10.4.20.tgz"
   integrity sha512-kRdtyKA3+Tu70N3RQ4JgmO1E3LzAMs/eppj7SfjabC7TgqNWoS4RLhWl4BqmsNVmjj6D5jgfPVtHtgYkU3AfpQ==
@@ -1001,6 +1001,13 @@
     express "4.21.2"
     multer "2.0.2"
     tslib "2.8.1"
+
+"@nestjs/schedule@^6.0.0":
+  version "6.0.0"
+  resolved "https://registry.npmjs.org/@nestjs/schedule/-/schedule-6.0.0.tgz"
+  integrity sha512-aQySMw6tw2nhitELXd3EiRacQRgzUKD9mFcUZVOJ7jPLqIBvXOyvRWLsK9SdurGA+jjziAlMef7iB5ZEFFoQpw==
+  dependencies:
+    cron "4.3.0"
 
 "@nestjs/schematics@^10.0.0", "@nestjs/schematics@^10.0.1":
   version "10.2.3"
@@ -1248,6 +1255,14 @@
   resolved "https://registry.npmjs.org/@types/cookiejar/-/cookiejar-2.1.5.tgz"
   integrity sha512-he+DHOWReW0nghN24E1WUqM0efK4kI9oTqDm6XmK8ZPe2djZ90BSNdGnIyCLzCPw7/pogPlGbzI2wHGGmi4O/Q==
 
+"@types/cron@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.npmjs.org/@types/cron/-/cron-2.0.1.tgz"
+  integrity sha512-WHa/1rtNtD2Q/H0+YTTZoty+/5rcE66iAFX2IY+JuUoOACsevYyFkSYu/2vdw+G5LrmO7Lxowrqm0av4k3qWNQ==
+  dependencies:
+    "@types/luxon" "*"
+    "@types/node" "*"
+
 "@types/eslint-scope@^3.7.7":
   version "3.7.7"
   resolved "https://registry.npmjs.org/@types/eslint-scope/-/eslint-scope-3.7.7.tgz"
@@ -1268,6 +1283,13 @@
   version "1.0.8"
   resolved "https://registry.npmjs.org/@types/estree/-/estree-1.0.8.tgz"
   integrity sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==
+
+"@types/express-rate-limit@^6.0.0":
+  version "6.0.2"
+  resolved "https://registry.npmjs.org/@types/express-rate-limit/-/express-rate-limit-6.0.2.tgz"
+  integrity sha512-e1xZLOOlxCDvplAGq7rDcXtbdBu2CWRsMjaIu1LVqGxWtKvwr884YE5mPs3IvHeG/OMDhf24oTaqG5T1bV3rBQ==
+  dependencies:
+    express-rate-limit "*"
 
 "@types/express-serve-static-core@^4.17.30", "@types/express-serve-static-core@^4.17.33":
   version "4.19.6"
@@ -1295,6 +1317,13 @@
   integrity sha512-olP3sd1qOEe5dXTSaFvQG+02VdRXcdytWLAZsAq1PecU8uqQAhkrnbli7DagjtXKW/Bl7YJbUsa8MPcuc8LHEQ==
   dependencies:
     "@types/node" "*"
+
+"@types/helmet@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.npmjs.org/@types/helmet/-/helmet-4.0.0.tgz"
+  integrity sha512-ONIn/nSNQA57yRge3oaMQESef/6QhoeX7llWeDli0UZIfz8TQMkfNPTXA8VnnyeA1WUjG2pGqdjEIueYonMdfQ==
+  dependencies:
+    helmet "*"
 
 "@types/http-errors@*":
   version "2.0.5"
@@ -1345,6 +1374,11 @@
   version "4.0.2"
   resolved "https://registry.npmjs.org/@types/long/-/long-4.0.2.tgz"
   integrity sha512-MqTGEo5bj5t157U6fA/BiDynNkn0YknVdh48CMPkTSpFTVmvao5UQmm7uEF6xBEo7qIMAlY/JSleYaE6VOdpaA==
+
+"@types/luxon@*", "@types/luxon@~3.6.0":
+  version "3.6.2"
+  resolved "https://registry.npmjs.org/@types/luxon/-/luxon-3.6.2.tgz"
+  integrity sha512-R/BdP7OxEMc44l2Ex5lSXHoIXTB2JLNa3y2QISIbr58U/YcsffyQrYW//hZSdrfxrjRZj3GcUoxMPGdO8gSYuw==
 
 "@types/methods@^1.1.4":
   version "1.1.4"
@@ -2392,6 +2426,14 @@ create-require@^1.1.0:
   resolved "https://registry.npmjs.org/create-require/-/create-require-1.1.1.tgz"
   integrity sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==
 
+cron@4.3.0:
+  version "4.3.0"
+  resolved "https://registry.npmjs.org/cron/-/cron-4.3.0.tgz"
+  integrity sha512-ciiYNLfSlF9MrDqnbMdRWFiA6oizSF7kA1osPP9lRzNu0Uu+AWog1UKy7SkckiDY2irrNjeO6qLyKnXC8oxmrw==
+  dependencies:
+    "@types/luxon" "~3.6.0"
+    luxon "~3.6.0"
+
 cross-inspect@1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/cross-inspect/-/cross-inspect-1.0.1.tgz"
@@ -2830,7 +2872,12 @@ expect@^29.0.0, expect@^29.7.0:
     jest-message-util "^29.7.0"
     jest-util "^29.7.0"
 
-express@^4.21.1, express@4.21.2:
+express-rate-limit@*, express-rate-limit@^7.1.5:
+  version "7.5.1"
+  resolved "https://registry.npmjs.org/express-rate-limit/-/express-rate-limit-7.5.1.tgz"
+  integrity sha512-7iN8iPMDzOMHPUYllBEsQdWVB6fPDMPqwjBaFrgr4Jgr/+okjvzAy+UHlYYL/Vs0OsOrMkwS6PJDkFlJwoxUnw==
+
+express@^4.21.1, "express@>= 4.11", express@4.21.2:
   version "4.21.2"
   resolved "https://registry.npmjs.org/express/-/express-4.21.2.tgz"
   integrity sha512-28HqgMZAmih1Czt9ny7qr6ek2qddF4FclbMzwhCREB6OFfH+rXAnuNCwo1/wFvrtbgsQDb4kSbX9de9lFbrXnA==
@@ -3306,6 +3353,11 @@ hasown@^2.0.2:
   integrity sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==
   dependencies:
     function-bind "^1.1.2"
+
+helmet@*, helmet@^7.1.0:
+  version "7.2.0"
+  resolved "https://registry.npmjs.org/helmet/-/helmet-7.2.0.tgz"
+  integrity sha512-ZRiwvN089JfMXokizgqEPXsl2Guk094yExfoDXR0cBYWxtBbaSww/w+vT4WEJsBW2iTUi1GgZ6swmoug3Oy4Xw==
 
 html-escaper@^2.0.0:
   version "2.0.2"
@@ -4213,6 +4265,11 @@ lru-cache@^7.10.1, lru-cache@^7.14.1:
   version "7.18.3"
   resolved "https://registry.npmjs.org/lru-cache/-/lru-cache-7.18.3.tgz"
   integrity sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==
+
+luxon@~3.6.0:
+  version "3.6.1"
+  resolved "https://registry.npmjs.org/luxon/-/luxon-3.6.1.tgz"
+  integrity sha512-tJLxrKJhO2ukZ5z0gyjY1zPh3Rh88Ej9P7jNrZiHMUXHae1yvI2imgOZtL1TO8TW6biMMKfTtAOoEJANgtWBMQ==
 
 magic-string@0.30.8:
   version "0.30.8"
@@ -5871,6 +5928,18 @@ ws@8.18.0:
   version "8.18.0"
   resolved "https://registry.npmjs.org/ws/-/ws-8.18.0.tgz"
   integrity sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==
+
+xss-clean@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.npmjs.org/xss-clean/-/xss-clean-0.1.4.tgz"
+  integrity sha512-4hArTFHYxrifK9VXOu/zFvwjTXVjKByPi6woUHb1IqxlX0Z4xtFBRjOhTKuYV/uE1VswbYsIh5vUEYp7MmoISQ==
+  dependencies:
+    xss-filters "1.2.7"
+
+xss-filters@1.2.7:
+  version "1.2.7"
+  resolved "https://registry.npmjs.org/xss-filters/-/xss-filters-1.2.7.tgz"
+  integrity sha512-KzcmYT/f+YzcYrYRqw6mXxd25BEZCxBQnf+uXTopQDIhrmiaLwO+f+yLsIvvNlPhYvgff8g3igqrBxYh9k8NbQ==
 
 xss@^1.0.8:
   version "1.0.15"

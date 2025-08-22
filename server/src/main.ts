@@ -1,16 +1,22 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
+import { rateLimitMiddleware, xssProtectionMiddleware, helmetMiddleware } from './middleware/security.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Глобальная валидация
+  // Global validation
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
     forbidNonWhitelisted: true,
     transform: true,
   }));
+
+  // Security
+  app.use(helmetMiddleware);
+  app.use(xssProtectionMiddleware);
+  app.use(rateLimitMiddleware);
 
   // CORS
   app.enableCors({

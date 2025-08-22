@@ -5,7 +5,7 @@ export const StyledCommentCard = styled(Paper)<{ level: number }>(
   ({ theme, level }) => ({
     padding: theme.spacing(2),
     marginBottom: theme.spacing(2),
-    marginLeft: level * theme.spacing(4),
+    marginLeft: level * 32, // 32px = theme.spacing(4)
     position: 'relative',
 
     '&::before':

@@ -2,6 +2,8 @@ import React from 'react';
 import { Button as MuiButton } from '@mui/material';
 import { ButtonProps } from './button.types';
 
+export type { ButtonProps };
+
 export const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
   children,

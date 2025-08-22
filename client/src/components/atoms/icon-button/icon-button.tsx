@@ -3,6 +3,8 @@ import { Tooltip } from '@mui/material';
 import { IconButtonProps } from './icon-button.types';
 import { StyledIconButton } from './icon-button.styles';
 
+export type { IconButtonProps };
+
 export const IconButton: React.FC<IconButtonProps> = ({
   icon,
   tooltip,

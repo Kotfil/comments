@@ -14,7 +14,7 @@ export { CommentHeader } from './molecules/comment-header';
 export { CommentContent } from './molecules/comment-content';
 export { UserInfo } from './molecules/user-info';
 export { ActionButtons } from './molecules/action-buttons';
-export { PollingControl } from './molecules/polling-control';
+
 
 // Organisms - сложные компоненты
 export { CommentItem } from './organisms/comment-item';

@@ -37,16 +37,16 @@ export const CommentItem: React.FC<CommentItemProps> = ({
     }
   }, [comment.homepage, level]);
 
-  // Обработчик скачивания файлов
-  const handleFileDownload = useCallback((file: any) => {
-    // Создаем ссылку для скачивания
-    const link = document.createElement('a');
-    link.href = file.data;
-    link.download = file.name;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }, []);
+  // Обработчик скачивания файлов (временно отключен)
+  // const handleFileDownload = useCallback((file: any) => {
+  //   // Создаем ссылку для скачивания
+  //   const link = document.createElement('a');
+  //   link.href = file.data;
+  //   link.download = file.name;
+  //   document.body.appendChild(link);
+  //   link.click();
+  //   document.body.removeChild(link);
+  // }, []);
 
   return (
     <Box
@@ -78,9 +78,9 @@ export const CommentItem: React.FC<CommentItemProps> = ({
       <CommentContent content={comment.content} onReply={handleReply} />
 
       {/* Показываем прикрепленные файлы только для основных комментариев */}
-      {level === 0 && comment.files && comment.files.length > 0 && (
+      {/* {level === 0 && comment.files && comment.files.length > 0 && (
         <AttachedFiles files={comment.files} onDownload={handleFileDownload} />
-      )}
+      )} */}
 
       {/* Показываем HomePage только для основных комментариев */}
       {level === 0 && comment.homepage && (
@@ -103,7 +103,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
       )}
 
       {/* Рекурсивно рендерим ответы */}
-      {comment.replies.length > 0 && (
+      {comment.replies && comment.replies.length > 0 && (
         <Box sx={{ mt: 2 }}>
           {comment.replies.map((reply) => (
             <CommentItem
