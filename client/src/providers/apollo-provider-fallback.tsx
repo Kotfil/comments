@@ -7,6 +7,8 @@ interface ApolloProviderWrapperProps {
 }
 
 // Fallback версия без Apollo Client для отладки
-export const ApolloProviderWrapper: React.FC<ApolloProviderWrapperProps> = ({ children }) => {
+export const ApolloProviderWrapper: React.FC<ApolloProviderWrapperProps> = ({
+  children,
+}) => {
   return <>{children}</>;
 };

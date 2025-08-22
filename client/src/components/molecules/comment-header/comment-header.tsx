@@ -8,8 +8,6 @@ export const CommentHeader: React.FC<CommentHeaderProps> = ({
   author,
   timestamp,
   avatar,
-  likes,
-  dislikes,
   onAction,
 }) => {
   const handleAction = (action: string) => {
@@ -26,7 +24,7 @@ export const CommentHeader: React.FC<CommentHeaderProps> = ({
       }}
     >
       <Avatar>{avatar}</Avatar>
-      
+
       <Box sx={{ flex: 1 }}>
         <Typography variant="subtitle2" fontWeight={600}>
           {author}
@@ -35,7 +33,7 @@ export const CommentHeader: React.FC<CommentHeaderProps> = ({
           {timestamp}
         </Typography>
       </Box>
-      
+
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
         <IconButton
           icon="#"
@@ -48,24 +46,10 @@ export const CommentHeader: React.FC<CommentHeaderProps> = ({
           onClick={() => handleAction('bookmark')}
         />
         <IconButton
-          icon="⬆️"
-          tooltip="Лайк"
-          onClick={() => handleAction('like')}
-        />
-        <IconButton
-          icon="⬇️"
-          tooltip="Дизлайк"
-          onClick={() => handleAction('dislike')}
-        />
-        <IconButton
           icon="🔄"
           tooltip="Поделиться"
           onClick={() => handleAction('share')}
         />
-        
-        <Typography variant="caption" color="secondary">
-          ↑{likes} ↓{dislikes}
-        </Typography>
       </Box>
     </Box>
   );

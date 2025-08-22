@@ -18,9 +18,7 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body className={inter.className}>
-        <ApolloProviderWrapper>
-          {children}
-        </ApolloProviderWrapper>
+        <ApolloProviderWrapper>{children}</ApolloProviderWrapper>
       </body>
     </html>
   );

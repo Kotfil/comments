@@ -1,4 +1,9 @@
-import { ApolloClient, InMemoryCache, createHttpLink, from } from '@apollo/client';
+import {
+  ApolloClient,
+  InMemoryCache,
+  createHttpLink,
+  from,
+} from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 
@@ -11,34 +16,36 @@ const httpLink = createHttpLink({
 });
 
 // Линк для обработки ошибок
-const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) => {
-  if (graphQLErrors) {
-    graphQLErrors.forEach(({ message, locations, path }) => {
-      console.error(
-        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-      );
-    });
-  }
+const errorLink = onError(
+  ({ graphQLErrors, networkError, operation, forward }) => {
+    if (graphQLErrors) {
+      graphQLErrors.forEach(({ message, locations, path }) => {
+        console.error(
+          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+        );
+      });
+    }
 
-  if (networkError) {
-    console.error(`[Network error]: ${networkError}`);
-  }
+    if (networkError) {
+      console.error(`[Network error]: ${networkError}`);
+    }
 
-  // Возвращаем операцию для повторной попытки
-  return forward(operation);
-});
+    // Возвращаем операцию для повторной попытки
+    return forward(operation);
+  }
+);
 
 // Линк для добавления заголовков (например, для аутентификации)
 const authLink = setContext((_, { headers }) => {
   // Получаем токен из localStorage (если есть)
   const token = isClient ? localStorage.getItem('authToken') : null;
-  
+
   return {
     headers: {
       ...headers,
       authorization: token ? `Bearer ${token}` : '',
       'Content-Type': 'application/json',
-    }
+    },
   };
 });
 

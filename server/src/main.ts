@@ -14,14 +14,11 @@ async function bootstrap() {
 
   // CORS
   app.enableCors({
-    origin: process.env.CLIENT_URL || 'http://localhost:3000',
+    origin: ['http://localhost:3000', 'http://localhost:3001'],
     credentials: true,
   });
 
-  // Глобальный префикс
-  app.setGlobalPrefix('api');
-
-  const port = process.env.PORT || 4000;
+  const port = process.env.PORT || 3001;
   await app.listen(port);
 
   console.log(`🚀 Application is running on: http://localhost:${port}`);

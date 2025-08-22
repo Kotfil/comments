@@ -56,7 +56,7 @@ export const GET_COMMENT_BY_HOMEPAGE = gql`
 
 // Мутация для создания комментария
 export const CREATE_COMMENT = gql`
-  mutation CreateComment($input: CreateCommentInput!) {
+  mutation CreateComment($input: CreateCommentDto!) {
     createComment(input: $input) {
       ...CommentFragment
     }
@@ -66,7 +66,7 @@ export const CREATE_COMMENT = gql`
 
 // Мутация для создания ответа на комментарий
 export const CREATE_REPLY = gql`
-  mutation CreateReply($input: CreateReplyInput!) {
+  mutation CreateReply($input: CreateReplyDto!) {
     createReply(input: $input) {
       ...CommentFragment
     }

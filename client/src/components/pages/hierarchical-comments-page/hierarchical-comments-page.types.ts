@@ -1,5 +1,5 @@
-import { CommentFormData } from '@/components/organisms/comment-form';
+import { ProcessedCommentFormData } from '@/components/organisms/comment-form';
 
 export interface HierarchicalCommentsPageProps {
-  onAddComment?: (commentData: CommentFormData) => void;
+  onAddComment?: (commentData: ProcessedCommentFormData) => void;
 }

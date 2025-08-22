@@ -11,16 +11,16 @@ export interface Comment {
   replies: Comment[];
 }
 
-// Входные данные для создания комментария
-export interface CreateCommentInput {
+// Входные данные для создания комментария (соответствует CreateCommentDto на сервере)
+export interface CreateCommentDto {
   author: string;
   email: string;
   homepage?: string;
   content: string;
 }
 
-// Входные данные для создания ответа
-export interface CreateReplyInput {
+// Входные данные для создания ответа (соответствует CreateReplyDto на сервере)
+export interface CreateReplyDto {
   parentId: string;
   author: string;
   email: string;
@@ -46,7 +46,7 @@ export interface CreateCommentData {
 }
 
 export interface CreateCommentVars {
-  input: CreateCommentInput;
+  input: CreateCommentDto;
 }
 
 export interface CreateReplyData {
@@ -54,7 +54,7 @@ export interface CreateReplyData {
 }
 
 export interface CreateReplyVars {
-  input: CreateReplyInput;
+  input: CreateReplyDto;
 }
 
 // Поисковые типы

@@ -2,10 +2,10 @@ import React from 'react';
 import { Button as MuiButton } from '@mui/material';
 import { ButtonProps } from './button.types';
 
-export const Button: React.FC<ButtonProps> = ({ 
-  variant = 'primary', 
-  children, 
-  ...props 
+export const Button: React.FC<ButtonProps> = ({
+  variant = 'primary',
+  children,
+  ...props
 }) => {
   const getMuiVariant = (): 'contained' | 'outlined' | 'text' => {
     switch (variant) {
@@ -19,10 +19,7 @@ export const Button: React.FC<ButtonProps> = ({
   };
 
   return (
-    <MuiButton
-      variant={getMuiVariant()}
-      {...props}
-    >
+    <MuiButton variant={getMuiVariant()} {...props}>
       {children}
     </MuiButton>
   );

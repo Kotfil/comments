@@ -1,6 +1,9 @@
 import React from 'react';
 import { Modal, Box } from '@mui/material';
-import { CommentForm, CommentFormData } from '@/components/organisms/comment-form';
+import {
+  CommentForm,
+  CommentFormData,
+} from '@/components/organisms/comment-form';
 import { CommentModalProps } from './comment-modal.types';
 
 export const CommentModal: React.FC<CommentModalProps> = ({

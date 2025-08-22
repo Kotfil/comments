@@ -9,7 +9,7 @@ interface UsePollingControlProps {
 export const usePollingControl = ({
   pollInterval = 30000,
   autoStart = true,
-  onPoll
+  onPoll,
 }: UsePollingControlProps = {}) => {
   const [isPolling, setIsPolling] = useState(autoStart);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
@@ -40,16 +40,19 @@ export const usePollingControl = ({
   }, [intervalId]);
 
   // Перезапуск polling с новым интервалом
-  const restartPolling = useCallback((newInterval?: number) => {
-    stopPolling();
-    const interval = newInterval || pollInterval;
-    
-    setTimeout(() => {
-      const id = setInterval(executePoll, interval);
-      setIntervalId(id);
-      setIsPolling(true);
-    }, 100);
-  }, [stopPolling, pollInterval, executePoll]);
+  const restartPolling = useCallback(
+    (newInterval?: number) => {
+      stopPolling();
+      const interval = newInterval || pollInterval;
+
+      setTimeout(() => {
+        const id = setInterval(executePoll, interval);
+        setIntervalId(id);
+        setIsPolling(true);
+      }, 100);
+    },
+    [stopPolling, pollInterval, executePoll]
+  );
 
   // Автоматический запуск при монтировании
   useEffect(() => {

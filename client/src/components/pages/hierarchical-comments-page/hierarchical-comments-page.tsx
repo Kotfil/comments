@@ -1,43 +1,49 @@
-import React, { useState, useMemo, useCallback, useDeferredValue } from 'react';
-import { Comment } from '@/graphql/types';
+import React, { useState, useMemo, useCallback } from 'react';
+import { useQuery, useMutation } from '@apollo/client/react';
+import { Comment, CreateCommentDto, CreateReplyDto } from '@/graphql/types';
+import { GET_COMMENTS, CREATE_COMMENT, CREATE_REPLY } from '@/graphql/schema';
 import { CommentsLayout } from '@/components/templates/comments-layout';
 import { CommentCard } from '@/components/organisms/comment-card';
 import { CommentModal } from '@/components/templates/comment-modal';
-import { CommentFormData } from '@/components/organisms/comment-form';
-import { PaginationComponent } from '@/components/molecules/pagination';
+import { ProcessedCommentFormData } from '@/components/organisms/comment-form';
 import { PollingControl } from '@/components/molecules/polling-control';
 import { HierarchicalCommentsPageProps } from './hierarchical-comments-page.types';
-import { 
-  useComments, 
-  useCreateComment, 
-  useCreateReply
-} from '@/hooks/use-comments';
-import { Box } from '@mui/material';
+import { Box, CircularProgress, Alert } from '@mui/material';
 
-export const HierarchicalCommentsPage: React.FC<HierarchicalCommentsPageProps> = ({ 
-  onAddComment 
-}) => {
+export const HierarchicalCommentsPage: React.FC<
+  HierarchicalCommentsPageProps
+> = ({ onAddComment }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [replyToComment, setReplyToComment] = useState<Comment | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pollInterval, setPollInterval] = useState(30000); // 30 секунд по умолчанию
   const commentsPerPage = 25;
 
-  // GraphQL хуки с polling
-  const { 
-    comments, 
-    loading: commentsLoading, 
-    error: commentsError, 
-    refetch,
-    startPolling,
-    stopPolling
-  } = useComments(pollInterval);
-  
-  const { createComment, loading: createLoading, error: createError } = useCreateComment();
-  const { createReply, loading: replyLoading, error: replyError } = useCreateReply();
+  // GraphQL хуки
+  const { data, loading, error, refetch, startPolling, stopPolling } = useQuery(
+    GET_COMMENTS,
+    {
+      pollInterval: pollInterval,
+      errorPolicy: 'all',
+    }
+  );
+
+  const [createComment, { loading: createLoading, error: createError }] =
+    useMutation(CREATE_COMMENT, {
+      refetchQueries: [{ query: GET_COMMENTS }],
+      errorPolicy: 'all',
+    });
+
+  const [createReply, { loading: replyLoading, error: replyError }] =
+    useMutation(CREATE_REPLY, {
+      refetchQueries: [{ query: GET_COMMENTS }],
+      errorPolicy: 'all',
+    });
+
+  const comments = data?.comments || [];
 
   // Отложенное значение для оптимизации рендеринга больших списков
-  const deferredComments = useDeferredValue(comments);
+  const deferredComments = useMemo(() => comments, [comments]);
 
   // Вычисляем общее количество страниц
   const totalPages = useMemo(() => {
@@ -52,48 +58,62 @@ export const HierarchicalCommentsPage: React.FC<HierarchicalCommentsPageProps> =
   }, [deferredComments, currentPage, commentsPerPage]);
 
   // Мемоизируем обработчик смены страницы
-  const handlePageChange = useCallback((event: React.ChangeEvent<unknown>, page: number) => {
-    setCurrentPage(page);
-    // Прокручиваем страницу вверх при смене страницы
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+  const handlePageChange = useCallback(
+    (event: React.ChangeEvent<unknown>, page: number) => {
+      setCurrentPage(page);
+      // Прокручиваем страницу вверх при смене страницы
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+    []
+  );
 
   // Мемоизируем обработчик добавления комментария
-  const handleAddComment = useCallback(async (commentData: CommentFormData) => {
-    try {
-      if (replyToComment) {
-        // Создаем ответ на комментарий
-        await createReply({
-          parentId: replyToComment.id,
-          author: commentData.author,
-          email: commentData.email,
-          homepage: commentData.homepage,
-          content: commentData.content,
-        });
-      } else {
-        // Создаем новый основной комментарий
-        await createComment({
-          author: commentData.author,
-          email: commentData.email,
-          homepage: commentData.homepage,
-          content: commentData.content,
-        });
-        // Сбрасываем на первую страницу при добавлении нового комментария
-        setCurrentPage(1);
-      }
+  const handleAddComment = useCallback(
+    async (commentData: ProcessedCommentFormData) => {
+      try {
+        if (replyToComment) {
+          // Создаем ответ на комментарий
+          const replyInput: CreateReplyDto = {
+            parentId: replyToComment.id,
+            author: commentData.author,
+            email: commentData.email,
+            homepage: commentData.homepage,
+            content: commentData.content,
+          };
 
-      // Если передан внешний обработчик, вызываем его
-      if (onAddComment) {
-        onAddComment(commentData);
-      }
+          await createReply({
+            variables: { input: replyInput },
+          });
+        } else {
+          // Создаем новый основной комментарий
+          const commentInput: CreateCommentDto = {
+            author: commentData.author,
+            email: commentData.email,
+            homepage: commentData.homepage,
+            content: commentData.content,
+          };
 
-      setReplyToComment(null);
-      setIsModalOpen(false);
-    } catch (error) {
-      console.error('Error adding comment:', error);
-      // Здесь можно добавить уведомление об ошибке
-    }
-  }, [replyToComment, createComment, createReply, onAddComment]);
+          await createComment({
+            variables: { input: commentInput },
+          });
+
+          // Сбрасываем на первую страницу при добавлении нового комментария
+          setCurrentPage(1);
+        }
+
+        // Если передан внешний обработчик, вызываем его
+        if (onAddComment) {
+          onAddComment(commentData);
+        }
+
+        setReplyToComment(null);
+        setIsModalOpen(false);
+      } catch (error) {
+        console.error('Error adding comment:', error);
+      }
+    },
+    [replyToComment, createComment, createReply, onAddComment]
+  );
 
   // Мемоизируем обработчик клика по ответу
   const handleReplyClick = useCallback((comment: Comment) => {
@@ -107,60 +127,69 @@ export const HierarchicalCommentsPage: React.FC<HierarchicalCommentsPageProps> =
     setIsModalOpen(true);
   }, []);
 
-  // Мемоизируем обработчик действий
-  const handleAction = useCallback((action: string, comment: Comment) => {
-    // Обработка действий с комментарием
-    console.log(`Action: ${action} on comment:`, comment);
-  }, []);
-
-  // Мемоизируем обработчик закрытия модала
+  // Мемоизируем обработчик закрытия модального окна
   const handleCloseModal = useCallback(() => {
     setIsModalOpen(false);
     setReplyToComment(null);
   }, []);
 
-  // Обработчики для polling
+  // Мемоизируем обработчик действий с комментарием
+  const handleAction = useCallback((action: string, comment: Comment) => {
+    console.log(`Action: ${action} on comment:`, comment);
+  }, []);
+
+  // Обработчики для PollingControl
   const handleStartPolling = useCallback(() => {
-    startPolling();
-  }, [startPolling]);
+    startPolling(pollInterval);
+  }, [startPolling, pollInterval]);
 
   const handleStopPolling = useCallback(() => {
     stopPolling();
   }, [stopPolling]);
 
-  const handleIntervalChange = useCallback((newInterval: number) => {
-    setPollInterval(newInterval);
+  const handleIntervalChange = useCallback((interval: number) => {
+    setPollInterval(interval);
   }, []);
 
-  // Мемоизируем информацию о пагинации
-  const paginationInfo = useMemo(() => ({
-    currentCount: currentComments.length,
-    totalCount: deferredComments.length,
-    currentPage,
-    totalPages
-  }), [currentComments.length, deferredComments.length, currentPage, totalPages]);
+  // Информация о пагинации
+  const paginationInfo = useMemo(
+    () => ({
+      currentCount: currentComments.length,
+      totalCount: comments.length,
+      currentPage: currentPage,
+      totalPages: totalPages,
+    }),
+    [currentComments.length, comments.length, currentPage, totalPages]
+  );
 
   // Показываем загрузку
-  if (commentsLoading) {
+  if (loading && comments.length === 0) {
     return (
       <CommentsLayout title="Иерархические комментарии">
-        <div style={{ textAlign: 'center', padding: '2rem' }}>
-          Загрузка комментариев...
-        </div>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="200px"
+        >
+          <CircularProgress />
+        </Box>
       </CommentsLayout>
     );
   }
 
   // Показываем ошибку
-  if (commentsError) {
+  if (error && comments.length === 0) {
     return (
       <CommentsLayout title="Иерархические комментарии">
-        <div style={{ textAlign: 'center', padding: '2rem', color: 'red' }}>
-          Ошибка загрузки комментариев: {commentsError.message}
-          <button onClick={() => refetch()} style={{ marginLeft: '1rem' }}>
+        <Alert severity="error" sx={{ mb: 2 }}>
+          Ошибка загрузки комментариев: {error.message}
+        </Alert>
+        <Box textAlign="center">
+          <button onClick={() => refetch()} style={{ padding: '8px 16px' }}>
             Попробовать снова
           </button>
-        </div>
+        </Box>
       </CommentsLayout>
     );
   }
@@ -171,22 +200,22 @@ export const HierarchicalCommentsPage: React.FC<HierarchicalCommentsPageProps> =
       onAddComment={handleAddMainComment}
     >
       {/* Управление polling */}
-      <Box 
-        display="flex" 
-        justifyContent="center" 
-        alignItems="center" 
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
         gap={2}
-        sx={{ 
-          mb: 3, 
-          p: 2, 
-          backgroundColor: 'grey.50', 
+        sx={{
+          mb: 3,
+          p: 2,
+          backgroundColor: 'grey.50',
           borderRadius: 2,
           border: '1px solid',
-          borderColor: 'grey.200'
+          borderColor: 'grey.200',
         }}
       >
         <PollingControl
-          isPolling={true} // Apollo Client автоматически управляет polling
+          isPolling={true}
           onStartPolling={handleStartPolling}
           onStopPolling={handleStopPolling}
           onRefresh={refetch}
@@ -197,27 +226,48 @@ export const HierarchicalCommentsPage: React.FC<HierarchicalCommentsPageProps> =
       </Box>
 
       {/* Информация о пагинации */}
-      <div style={{ 
-        textAlign: 'center', 
-        marginBottom: '20px', 
-        color: '#666',
-        fontSize: '14px'
-      }}>
-        Показано {paginationInfo.currentCount} из {paginationInfo.totalCount} комментариев 
-        (страница {paginationInfo.currentPage} из {paginationInfo.totalPages})
+      <div
+        style={{
+          textAlign: 'center',
+          marginBottom: '20px',
+          color: '#666',
+          fontSize: '14px',
+        }}
+      >
+        Показано {paginationInfo.currentCount} из {paginationInfo.totalCount}{' '}
+        комментариев (страница {paginationInfo.currentPage} из{' '}
+        {paginationInfo.totalPages})
       </div>
 
-      {/* Пагинация */}
+      {/* Простая пагинация */}
       {totalPages > 1 && (
-        <PaginationComponent
-          count={totalPages}
-          page={currentPage}
-          onChange={handlePageChange}
-        />
+        <Box display="flex" justifyContent="center" gap={1} mb={3}>
+          <button
+            onClick={() =>
+              handlePageChange({} as any, Math.max(1, currentPage - 1))
+            }
+            disabled={currentPage === 1}
+            style={{ padding: '8px 16px', margin: '0 4px' }}
+          >
+            ←
+          </button>
+          <span style={{ padding: '8px 16px' }}>
+            {currentPage} из {totalPages}
+          </span>
+          <button
+            onClick={() =>
+              handlePageChange({} as any, Math.min(totalPages, currentPage + 1))
+            }
+            disabled={currentPage === totalPages}
+            style={{ padding: '8px 16px', margin: '0 4px' }}
+          >
+            →
+          </button>
+        </Box>
       )}
 
       {/* Комментарии текущей страницы */}
-      {currentComments.map((comment) => (
+      {currentComments.map((comment: Comment) => (
         <CommentCard
           key={comment.id}
           comment={comment}
@@ -225,29 +275,28 @@ export const HierarchicalCommentsPage: React.FC<HierarchicalCommentsPageProps> =
           onAction={handleAction}
         />
       ))}
-      
+
       <CommentModal
         open={isModalOpen}
         onClose={handleCloseModal}
         onSubmit={handleAddComment}
-        replyToComment={replyToComment ? {
-          author: replyToComment.author,
-          content: replyToComment.content,
-        } : null}
+        replyToComment={
+          replyToComment
+            ? {
+                author: replyToComment.author,
+                content: replyToComment.content,
+              }
+            : null
+        }
         isSubmitting={createLoading || replyLoading}
       />
 
       {/* Показываем ошибки создания */}
       {(createError || replyError) && (
-        <div style={{ 
-          marginTop: '1rem', 
-          padding: '1rem', 
-          backgroundColor: '#fee', 
-          color: '#c00',
-          borderRadius: '4px'
-        }}>
-          Ошибка: {createError?.message || replyError?.message}
-        </div>
+        <Alert severity="error" sx={{ mt: 2 }}>
+          Ошибка создания комментария:{' '}
+          {createError?.message || replyError?.message}
+        </Alert>
       )}
     </CommentsLayout>
   );

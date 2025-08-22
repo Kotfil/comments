@@ -1,26 +1,48 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { Box, Typography, Paper, Container, Avatar, Chip, CircularProgress, Alert } from '@mui/material';
-import { useCommentByHomepage } from '@/hooks/use-comments';
+import {
+  Box,
+  Typography,
+  Paper,
+  Container,
+  Avatar,
+  Chip,
+  CircularProgress,
+  Alert,
+} from '@mui/material';
+import { Comment } from '@/graphql/types';
 
 export default function HomePageComment() {
   const params = useParams();
   const homepage = params.homepage as string;
-  
-  const { comment, loading, error, refetch } = useCommentByHomepage(homepage);
+
+  const [comment, setComment] = useState<Comment | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (homepage) {
-      refetch();
+      // Имитируем загрузку комментария
+      setLoading(true);
+      setTimeout(() => {
+        // Здесь в реальном приложении был бы запрос к API
+        setLoading(false);
+        setError('Комментарий не найден');
+      }, 1000);
     }
-  }, [homepage, refetch]);
+  }, [homepage]);
 
   if (loading) {
     return (
       <Container maxWidth="md" sx={{ py: 4 }}>
-        <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="200px"
+        >
           <CircularProgress />
         </Box>
       </Container>
@@ -31,7 +53,7 @@ export default function HomePageComment() {
     return (
       <Container maxWidth="md" sx={{ py: 4 }}>
         <Alert severity="error" sx={{ mb: 2 }}>
-          Ошибка загрузки комментария: {error.message}
+          Ошибка загрузки комментария: {error}
         </Alert>
         <Box textAlign="center">
           <Typography variant="h6" color="text.secondary" gutterBottom>
@@ -80,9 +102,9 @@ export default function HomePageComment() {
 
         {/* URL комментария */}
         <Box mb={3}>
-          <Chip 
-            label={`🌐 ${comment.homepage}`} 
-            variant="outlined" 
+          <Chip
+            label={`🌐 ${comment.homepage}`}
+            variant="outlined"
             color="primary"
             sx={{ fontSize: '1rem' }}
           />
@@ -102,21 +124,12 @@ export default function HomePageComment() {
 
         {/* Статистика */}
         <Box display="flex" gap={2} mb={3}>
-          <Chip 
-            label={`👍 ${comment.likes}`} 
-            color="success" 
+          <Chip
+            label={`Уровень: ${comment.level}`}
+            color="info"
             variant="outlined"
           />
-          <Chip 
-            label={`👎 ${comment.dislikes}`} 
-            color="error" 
-            variant="outlined"
-          />
-          <Chip 
-            label={`Уровень: ${comment.level}`} 
-            color="info" 
-            variant="outlined"
-          />
+          <Chip label="📝 Комментарий" color="primary" variant="outlined" />
         </Box>
 
         {/* Ответы */}
@@ -126,7 +139,11 @@ export default function HomePageComment() {
               Ответы ({comment.replies.length}):
             </Typography>
             {comment.replies.map((reply) => (
-              <Paper key={reply.id} variant="outlined" sx={{ p: 2, mb: 2, ml: 3 }}>
+              <Paper
+                key={reply.id}
+                variant="outlined"
+                sx={{ p: 2, mb: 2, ml: 3 }}
+              >
                 <Box display="flex" alignItems="center" mb={1}>
                   <Avatar sx={{ mr: 2, width: 32, height: 32 }}>
                     {reply.avatar}
@@ -140,20 +157,12 @@ export default function HomePageComment() {
                     </Typography>
                   </Box>
                 </Box>
-                <Typography variant="body2">
-                  {reply.content}
-                </Typography>
+                <Typography variant="body2">{reply.content}</Typography>
                 <Box display="flex" gap={1} mt={1}>
-                  <Chip 
-                    label={`👍 ${reply.likes}`} 
+                  <Chip
+                    label="💬 Ответ"
                     size="small"
-                    color="success" 
-                    variant="outlined"
-                  />
-                  <Chip 
-                    label={`👎 ${reply.dislikes}`} 
-                    size="small"
-                    color="error" 
+                    color="info"
                     variant="outlined"
                   />
                 </Box>
@@ -164,9 +173,9 @@ export default function HomePageComment() {
 
         {/* Кнопка возврата */}
         <Box textAlign="center" mt={4}>
-          <Typography 
-            variant="body2" 
-            color="primary" 
+          <Typography
+            variant="body2"
+            color="primary"
             sx={{ cursor: 'pointer', textDecoration: 'underline' }}
             onClick={() => window.history.back()}
           >
@@ -177,4 +186,3 @@ export default function HomePageComment() {
     </Container>
   );
 }
-

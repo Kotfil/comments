@@ -11,7 +11,7 @@ export const CommentContent: React.FC<CommentContentProps> = ({
       <Typography variant="body2" sx={{ mb: 1 }}>
         {content}
       </Typography>
-      
+
       {onReply && (
         <Button
           variant="text"

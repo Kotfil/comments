@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { Box } from '@mui/material';
 import { CommentHeader } from '@/components/molecules/comment-header';
 import { CommentContent } from '@/components/molecules/comment-content';
+import { AttachedFiles } from '@/components/molecules/attached-files';
 import { CommentItemProps } from './comment-item.types';
 
 export const CommentItem: React.FC<CommentItemProps> = ({
@@ -16,9 +17,12 @@ export const CommentItem: React.FC<CommentItemProps> = ({
   }, [onReply, comment]);
 
   // Мемоизируем обработчик действий
-  const handleAction = useCallback((action: string) => {
-    onAction?.(action, comment);
-  }, [onAction, comment]);
+  const handleAction = useCallback(
+    (action: string) => {
+      onAction?.(action, comment);
+    },
+    [onAction, comment]
+  );
 
   // Мемоизируем обработчик клика по HomePage
   const handleHomepageClick = useCallback(() => {
@@ -33,49 +37,63 @@ export const CommentItem: React.FC<CommentItemProps> = ({
     }
   }, [comment.homepage, level]);
 
+  // Обработчик скачивания файлов
+  const handleFileDownload = useCallback((file: any) => {
+    // Создаем ссылку для скачивания
+    const link = document.createElement('a');
+    link.href = file.data;
+    link.download = file.name;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }, []);
+
   return (
     <Box
       sx={{
         ml: level * 3,
         mb: 2,
         position: 'relative',
-        '&::before': level > 0 ? {
-          content: '""',
-          position: 'absolute',
-          left: -16,
-          top: 0,
-          bottom: 0,
-          width: 2,
-          backgroundColor: '#e0e0e0',
-        } : {},
+        '&::before':
+          level > 0
+            ? {
+                content: '""',
+                position: 'absolute',
+                left: -16,
+                top: 0,
+                bottom: 0,
+                width: 2,
+                backgroundColor: '#e0e0e0',
+              }
+            : {},
       }}
     >
       <CommentHeader
         author={comment.author}
         timestamp={comment.timestamp}
         avatar={comment.avatar}
-        likes={comment.likes}
-        dislikes={comment.dislikes}
         onAction={handleAction}
       />
-      
-      <CommentContent
-        content={comment.content}
-        onReply={handleReply}
-      />
+
+      <CommentContent content={comment.content} onReply={handleReply} />
+
+      {/* Показываем прикрепленные файлы только для основных комментариев */}
+      {level === 0 && comment.files && comment.files.length > 0 && (
+        <AttachedFiles files={comment.files} onDownload={handleFileDownload} />
+      )}
 
       {/* Показываем HomePage только для основных комментариев */}
       {level === 0 && comment.homepage && (
-        <Box 
-          sx={{ 
-            mt: 1, 
+        <Box
+          sx={{
+            mt: 1,
             cursor: 'pointer',
             color: 'primary.main',
             textDecoration: 'underline',
             fontSize: '0.875rem',
             '&:hover': {
               color: 'primary.dark',
-            }
+            },
           }}
           onClick={handleHomepageClick}
           title="Кликните для перехода по ссылке"
@@ -83,7 +101,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
           🌐 {comment.homepage}
         </Box>
       )}
-      
+
       {/* Рекурсивно рендерим ответы */}
       {comment.replies.length > 0 && (
         <Box sx={{ mt: 2 }}>

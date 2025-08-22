@@ -6,7 +6,7 @@ export const StyledButton = styled(MuiButton)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   textTransform: 'none',
   fontWeight: 500,
-  
+
   // Специфичные стили для primary
   '&.MuiButton-contained': {
     backgroundColor: theme.palette.primary.main,
@@ -15,7 +15,7 @@ export const StyledButton = styled(MuiButton)(({ theme }) => ({
       backgroundColor: theme.palette.primary.dark,
     },
   },
-  
+
   // Специфичные стили для outline
   '&.MuiButton-outlined': {
     borderColor: theme.palette.primary.main,

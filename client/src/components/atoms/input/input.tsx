@@ -2,11 +2,11 @@ import React from 'react';
 import { TextField } from '@mui/material';
 import { InputProps } from './input.types';
 
-export const Input: React.FC<InputProps> = ({ 
+export const Input: React.FC<InputProps> = ({
   variant = 'outlined',
   error = false,
   helperText,
-  ...props 
+  ...props
 }) => {
   return (
     <TextField

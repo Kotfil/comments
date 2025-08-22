@@ -26,9 +26,8 @@ export class CommentsResolver {
   @Query(() => [Comment], { description: 'Поиск комментариев' })
   async searchComments(
     @Args('query') query: string,
-    @Args('filters', { nullable: true }) filters?: any,
   ): Promise<Comment[]> {
-    return this.commentsService.searchComments(query, filters);
+    return this.commentsService.searchComments(query);
   }
 
   @Query(() => [Comment], { description: 'Поиск комментариев по содержимому' })

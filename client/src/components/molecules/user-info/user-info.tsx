@@ -13,7 +13,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   return (
     <UserInfoContainer>
       <Avatar size={size}>{avatar}</Avatar>
-      
+
       <UserInfoContent>
         <Typography variant="subtitle2" fontWeight={600}>
           {author}

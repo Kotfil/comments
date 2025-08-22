@@ -17,17 +17,14 @@ export const CommentsLayout: React.FC<CommentsLayoutProps> = ({
         <Typography variant="h4" component="h1">
           {title}
         </Typography>
-        
+
         {showAddButton && onAddComment && (
-          <Button
-            variant="primary"
-            onClick={onAddComment}
-          >
+          <Button variant="primary" onClick={onAddComment}>
             {addButtonText}
           </Button>
         )}
       </LayoutHeader>
-      
+
       {children}
     </StyledContainer>
   );

@@ -17,7 +17,9 @@ export const FormField: React.FC<FormFieldProps> = ({
   required = false,
   infoText,
 }) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     onChange(e.target.value);
   };
 
@@ -25,12 +27,10 @@ export const FormField: React.FC<FormFieldProps> = ({
     <Box sx={{ mb: 2 }}>
       {infoText && (
         <Alert severity="info" sx={{ mb: 1 }}>
-          <Typography variant="body2">
-            {infoText}
-          </Typography>
+          <Typography variant="body2">{infoText}</Typography>
         </Alert>
       )}
-      
+
       <Input
         label={`${label}${required ? ' *' : ''}`}
         name={name}

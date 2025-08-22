@@ -37,7 +37,11 @@ export const PollingControl: React.FC<PollingControlProps> = ({
   return (
     <Box display="flex" alignItems="center" gap={1}>
       {/* Кнопка Play/Pause */}
-      <Tooltip title={isPolling ? 'Остановить автообновление' : 'Запустить автообновление'}>
+      <Tooltip
+        title={
+          isPolling ? 'Остановить автообновление' : 'Запустить автообновление'
+        }
+      >
         <IconButton
           onClick={isPolling ? onStopPolling : onStartPolling}
           color={isPolling ? 'success' : 'default'}

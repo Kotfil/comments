@@ -3,11 +3,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { ClientsModule, Transport } from '@nestjs/microservices';
 import { CommentsModule } from './modules/comments.module';
 import { getTypeOrmConfig } from './config/typeorm.config';
-import { getElasticsearchConfig } from './config/elasticsearch.config';
-import { getKafkaConfig } from './config/kafka.config';
 
 @Module({
   imports: [
@@ -27,21 +24,12 @@ import { getKafkaConfig } from './config/kafka.config';
     // GraphQL
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: true, // Автогенерация схемы
-      playground: process.env.GRAPHQL_PLAYGROUND === 'true',
-      debug: process.env.GRAPHQL_DEBUG === 'true',
+      autoSchemaFile: true,
+      playground: true,
       introspection: true,
-      context: ({ req }) => ({ req }),
     }),
 
-    // Kafka
-    ClientsModule.registerAsync([
-      {
-        name: 'KAFKA_SERVICE',
-        useFactory: getKafkaConfig,
-        inject: [],
-      },
-    ]),
+
 
     // Модули приложения
     CommentsModule,

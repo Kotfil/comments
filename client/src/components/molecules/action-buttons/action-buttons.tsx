@@ -1,15 +1,9 @@
 import React from 'react';
 import { IconButton } from '@/components/atoms/icon-button';
-import { Typography } from '@/components/atoms/typography';
 import { ActionButtonsProps } from './action-buttons.types';
 import { ActionButtonsContainer } from './action-buttons.styles';
 
-export const ActionButtons: React.FC<ActionButtonsProps> = ({
-  likes,
-  dislikes,
-  onAction,
-  showVoteCounter = true,
-}) => {
+export const ActionButtons: React.FC<ActionButtonsProps> = ({ onAction }) => {
   const handleAction = (action: string) => {
     onAction?.(action);
   };
@@ -27,26 +21,10 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
         onClick={() => handleAction('bookmark')}
       />
       <IconButton
-        icon="⬆️"
-        tooltip="Лайк"
-        onClick={() => handleAction('like')}
-      />
-      <IconButton
-        icon="⬇️"
-        tooltip="Дизлайк"
-        onClick={() => handleAction('dislike')}
-      />
-      <IconButton
         icon="🔄"
         tooltip="Поделиться"
         onClick={() => handleAction('share')}
       />
-      
-      {showVoteCounter && (
-        <Typography variant="caption" color="secondary">
-          ↑{likes} ↓{dislikes}
-        </Typography>
-      )}
     </ActionButtonsContainer>
   );
 };
