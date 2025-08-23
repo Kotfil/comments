@@ -31,6 +31,7 @@ import { getTypeOrmConfig } from './config/typeorm.config';
       autoSchemaFile: true,
       playground: true,
       introspection: true,
+      context: ({ req, res }) => ({ req, res }),
     }),
 
     // Schedule module for cron jobs
