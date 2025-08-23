@@ -13,7 +13,7 @@ interface ApolloProviderWrapperProps {
 }
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:3001/graphql',
+  uri: process.env.NEXT_PUBLIC_GRAPHQL_URL 
 });
 
 const client = new ApolloClient({
