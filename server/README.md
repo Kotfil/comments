@@ -1,16 +1,16 @@
 # Comments Server
 
-GraphQL сервер для комментариев на NestJS с TypeORM и PostgreSQL.
+GraphQL server for comments on NestJS with TypeORM and PostgreSQL.
 
-## 🚀 Быстрый старт
+## 🚀 Quick start
 
-### 1. Установка зависимостей
+### 1. Install dependencies
 ```bash
 pnpm install
 ```
 
-### 2. Настройка базы данных
-Создайте файл `.env` на основе `env.example`:
+### 2. Configure the database
+Create a `.env` file based on `env.example`:
 ```env
 DB_HOST=localhost
 DB_PORT=5432
@@ -19,102 +19,102 @@ DB_PASSWORD=your_password
 DB_DATABASE=comments_db
 ```
 
-### 3. Создание базы данных
+### 3. Create database
 ```sql
 CREATE DATABASE comments_db;
 ```
 
-### 4. Запуск сервера
+### 4. Start the server
 ```bash
-# Режим разработки
+# Development mode
 pnpm start:dev
 
-# Продакшн
+# Production
 pnpm build
 pnpm start:prod
 ```
 
 ## 📊 GraphQL Playground
 
-После запуска откройте: http://localhost:4000/graphql
+After starting, open: http://localhost:4000/graphql
 
-## 🗄️ Структура данных
+## 🗄️ Data structure
 
 ### PostgreSQL
 
-### Таблица `comments`
+### Table `comments`
 - `id` - UUID (Primary Key)
-- `author` - VARCHAR(100) - Имя автора
-- `email` - VARCHAR(255) - Email автора
-- `homepage` - VARCHAR(255) - URL домашней страницы (опционально)
-- `avatar` - VARCHAR(10) - Эмодзи аватар
-- `content` - TEXT - Содержимое комментария
-- `timestamp` - TIMESTAMP - Время создания
+- `author` - VARCHAR(100) - Author name
+- `email` - VARCHAR(255) - Author email
+- `homepage` - VARCHAR(255) - Homepage URL (optional)
+- `avatar` - VARCHAR(10) - Avatar emoji
+- `content` - TEXT - Comment content
+- `timestamp` - TIMESTAMP - Creation time
 
-- `level` - INTEGER - Уровень вложенности
-- `parent_id` - UUID - ID родительского комментария (для ответов)
-- `created_at` - TIMESTAMP - Время создания записи
-- `updated_at` - TIMESTAMP - Время обновления записи
+- `level` - INTEGER - Nesting level
+- `parent_id` - UUID - Parent comment ID (for replies)
+- `created_at` - TIMESTAMP - Creation time
+- `updated_at` - TIMESTAMP - Update time
 
-## 🔧 Доступные операции
+## 🔧 Available operations
 
 ### Queries
-- `comments` - Получить все комментарии
-- `comment(id: ID!)` - Получить комментарий по ID
-- `commentByHomepage(homepage: String!)` - Получить комментарий по HomePage
+- `comments` - Get all comments
+- `comment(id: ID!)` - Get a comment by ID
+- `commentByHomepage(homepage: String!)` - Get a comment by HomePage
 
 ### Mutations
-- `createComment(input: CreateCommentInput!)` - Создать комментарий
-- `createReply(input: CreateReplyInput!)` - Создать ответ
+- `createComment(input: CreateCommentInput!)` - Create a comment
+- `createReply(input: CreateReplyInput!)` - Create a reply
 
-- `deleteComment(id: ID!)` - Удалить комментарий
+- `deleteComment(id: ID!)` - Delete a comment
 
 ### Elasticsearch
-- `searchComments(query: String!, filters: JSON)` - Поиск комментариев
-- `searchByContent(content: String!)` - Поиск по содержимому
-- `searchByAuthor(author: String!)` - Поиск по автору
-- `searchByHomepage(homepage: String!)` - Поиск по HomePage
-- `getSuggestions(query: String!)` - Автодополнение
+- `searchComments(query: String!, filters: JSON)` - Search for comments
+- `searchByContent(content: String!)` - Search by content
+- `searchByAuthor(author: String!)` - Search by author
+- `searchByHomepage(homepage: String!)` - Search by HomePage
+- `getSuggestions(query: String!)` - Autocomplete
 
 ### Kafka Events
-- `comment.created` - Событие создания комментария
-- `comment.deleted` - Событие удаления комментария
-- `comment.reply.created` - Событие создания ответа
-- `comment.search.requested` - Запрос поиска комментариев
-- `comment.index.requested` - Запрос индексации комментария
-- `comment.sync.requested` - Запрос синхронизации комментариев
+- `comment.created` - Comment creation event
+- `comment.deleted` - Comment deletion event
+- `comment.reply.created` - Reply creation event
+- `comment.search.requested` - Comment search request
+- `comment.index.requested` - Comment indexing request
+- `comment.sync.requested` - Comment synchronization request
 
-## 📁 Структура проекта
+## 📁 Project structure
 
 ```
 src/
-├── config/          # Конфигурация TypeORM
+├── config/          # TypeORM configuration
 ├── dto/            # Data Transfer Objects
-├── entities/       # TypeORM сущности
-├── modules/        # NestJS модули
-├── resolvers/      # GraphQL резолверы
-├── services/       # Бизнес-логика
-├── app.module.ts   # Главный модуль
-└── main.ts         # Точка входа
+├── entities/       # TypeORM entities
+├── modules/        # NestJS modules
+├── resolvers/      # GraphQL resolvers
+├── services/       # Business logic
+├── app.module.ts   # Main module
+└── main.ts         # Entry point
 ```
 
-## 🛠️ Команды разработки
+## 🛠️ Development commands
 
 ```bash
-# Сборка
+# Build
 pnpm build
 
-# Линтинг
+# Linting
 pnpm lint
 
-# Тесты
+# Tests
 pnpm test
 
-# TypeORM команды
-pnpm migration:generate    # Генерация миграции
-pnpm migration:run         # Запуск миграций
-pnpm migration:revert      # Откат миграции
-pnpm schema:sync          # Синхронизация схемы
+# TypeORM commands
+pnpm migration:generate    # Generate migration
+pnpm migration:run         # Run migrations
+pnpm migration:revert      # Revert migration
+pnpm schema:sync          # Synchronize schema
 ```
 
 ## 🌐 API Endpoints
@@ -127,15 +127,15 @@ pnpm schema:sync          # Синхронизация схемы
 - **Kafka**: `localhost:9092`
 - **Kafka UI**: `http://localhost:8080`
 
-## 🔒 Безопасность
+## 🔒 Security
 
-- Валидация входных данных через class-validator
-- CORS настройки для клиента
-- Подготовленные SQL запросы через TypeORM
+- Input data validation via class-validator
+- CORS settings for the client
+- Prepared SQL queries via TypeORM
 
-## 📝 Примеры запросов
+## 📝 Query examples
 
-### Получить все комментарии
+### Get all comments
 ```graphql
 query {
   comments {
@@ -152,14 +152,14 @@ query {
 }
 ```
 
-### Создать комментарий
+### Create a comment
 ```graphql
 mutation {
   createComment(input: {
-    author: "John Doe"
-    email: "john@example.com"
-    content: "Отличный пост!"
-    homepage: "johndoe"
+    author: “John Doe”
+    email: “john@example.com”
+    content: “Great post!”
+    homepage: “johndoe”
   }) {
     id
     author
@@ -169,29 +169,29 @@ mutation {
 }
 ```
 
-## 🚀 Развертывание
+## 🚀 Deployment
 
-### Docker (в разработке)
+### Docker (in development)
 ```bash
 docker-compose up -d
 ```
 
-### Продакшн
+### Production
 ```bash
-# Установка зависимостей
+# Install dependencies
 pnpm install --production
 
-# Сборка
+# Build
 pnpm build
 
-# Запуск
+# Start
 pnpm start:prod
 ```
 
-## 📞 Поддержка
+## 📞 Support
 
-При возникновении проблем:
-1. Проверьте логи сервера
-2. Убедитесь в доступности PostgreSQL
-3. Проверьте переменные окружения
-4. Убедитесь в корректности GraphQL схемы
+If you encounter any problems:
+1. Check the server logs
+2. Make sure PostgreSQL is available
+3. Check the environment variables
+4. Make sure the GraphQL schema is correct
