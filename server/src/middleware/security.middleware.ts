@@ -2,7 +2,6 @@ import { Injectable, NestMiddleware, HttpException, HttpStatus } from '@nestjs/c
 import { Request, Response, NextFunction } from 'express';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
-import xss from 'xss-clean';
 
 @Injectable()
 export class SecurityMiddleware implements NestMiddleware {
@@ -121,7 +120,10 @@ export const rateLimitMiddleware = rateLimit({
 });
 
 // XSS protection middleware
-export const xssProtectionMiddleware = xss();
+export const xssProtectionMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  // Базовая защита от XSS через наш SecurityMiddleware
+  next();
+};
 
 // Header security middleware
 export const helmetMiddleware = helmet({

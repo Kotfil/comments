@@ -7,8 +7,6 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CommentsModule } from './modules/comments.module';
 import { SecurityModule } from './modules/security/security.module';
-import { CleanupService } from './services/cleanup.service';
-import { CleanupController } from './controllers/cleanup.controller';
 import { getTypeOrmConfig } from './config/typeorm.config';
 
 @Module({
@@ -59,7 +57,7 @@ import { getTypeOrmConfig } from './config/typeorm.config';
     SecurityModule,
     CommentsModule,
   ],
-  controllers: [CleanupController],
-  providers: [CleanupService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
