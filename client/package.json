@@ -9,8 +9,7 @@
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "prepare": "husky install"
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@apollo/client": "^3.8.0",
@@ -34,20 +33,9 @@
     "eslint-config-next": "14.0.4",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
-    "husky": "^8.0.3",
-    "lint-staged": "^15.2.0",
     "prettier": "^3.0.0",
     "typescript": "^5"
   },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{json,md}": [
-      "prettier --write"
-    ]
-  },
-    "packageManager": "yarn@1.22.20"
+  "packageManager": "yarn@1.22.20"
 
 }

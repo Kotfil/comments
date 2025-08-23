@@ -1,6 +1,6 @@
 module.exports = {
     apps: [{
-      name: 'comments-server',
+      name: 'nestjs-comments-pet',
       script: 'dist/main.js',
       instances: 1,
       autorestart: true,
