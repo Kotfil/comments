@@ -4,17 +4,20 @@ import { Comment } from '../entities/comment.entity';
 
 export const getTypeOrmConfig = (configService: ConfigService): TypeOrmModuleOptions => ({
   type: 'postgres',
-  host: 'localhost',
-  port: 5432,
-  username: 'dzencode',
-  password: 'dzencode',
-  database: 'dzencode',
+  host: configService.get('DB_HOST', 'localhost'),
+  port: configService.get('DB_PORT', 5432),
+  username: configService.get('DB_USERNAME', 'postgres'),
+  password: configService.get('DB_PASSWORD', 'password'),
+  database: configService.get('DB_DATABASE', 'comments_db'),
   entities: [Comment],
-  synchronize: true, // Только для разработки
-  logging: true,
-  ssl: false,
+  synchronize: configService.get('NODE_ENV', 'development') === 'development',
+  logging: configService.get('NODE_ENV', 'development') === 'development',
+  ssl: configService.get('NODE_ENV', 'development') === 'production' 
+    ? { rejectUnauthorized: false } 
+    : false,
 });
 
+// Fallback конфигурация для прямого использования
 export const typeOrmConfig: TypeOrmModuleOptions = {
   type: 'postgres',
   host: process.env.DB_HOST || 'localhost',
