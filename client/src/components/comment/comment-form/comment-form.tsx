@@ -1,9 +1,9 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { Box, Typography, Alert } from '@mui/material';
-import { FormField } from '@/components/molecules/form-field';
-import { HTMLToolbar } from '@/components/molecules/html-toolbar';
-import { FileUpload } from '@/components/molecules/file-upload';
-import { Button } from '@/components/atoms/button';
+import { FormField } from '@/components/simple-components/form-field';
+import { HTMLToolbar } from '@/components/simple-components/html-toolbar';
+import { FileUpload } from '@/components/simple-components/file-upload';
+import { Button } from '@/components/atomic/button';
 import {
   CommentFormProps,
   CommentFormData,

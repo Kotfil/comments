@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { UploadedFile } from '@/components/molecules/file-upload';
+import { UploadedFile } from '@/components/simple-components/file-upload';
 import { prepareFilesForUpload } from '@/lib/file-utils';
 
 export const useFileUpload = () => {

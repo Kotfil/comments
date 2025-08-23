@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography, Alert } from '@mui/material';
-import { Input } from '@/components/atoms/input';
+import { Input } from '@/components/atomic/input';
 import { FormFieldProps } from './form-field.types';
 
 export type { FormFieldProps };

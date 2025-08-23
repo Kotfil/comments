@@ -3,9 +3,9 @@ import { useQuery, useMutation } from '@apollo/client';
 import { Comment, CreateCommentDto, CreateReplyDto } from '@/graphql/types';
 import { GET_COMMENTS, CREATE_COMMENT, CREATE_REPLY } from '@/graphql/schema';
 import { CommentsLayout } from '@/components/templates/comments-layout';
-import { CommentCard } from '@/components/organisms/comment-card';
+import { CommentCard } from '@/components/comment/comment-card';
 import { CommentModal } from '@/components/templates/comment-modal';
-import { ProcessedCommentFormData } from '@/components/organisms/comment-form';
+import { ProcessedCommentFormData } from '@/components/comment/comment-form';
 
 import { HierarchicalCommentsPageProps } from './hierarchical-comments-page.types';
 import { Box, CircularProgress, Alert } from '@mui/material';

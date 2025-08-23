@@ -1,103 +1,103 @@
 # 💬 Comments System
 
-Полноценная система комментариев с клиентом на Next.js и сервером на NestJS.
+A full-featured commenting system with a client on Next.js and a server on NestJS.
 
-## 🏗️ Архитектура
+## 🏗️ Architecture
 
 ### Frontend (Client)
-- **Next.js 14** с TypeScript
-- **Material-UI** для компонентов
-- **Styled Components** для стилизации
-- **Apollo Client** для GraphQL
-- **Atomic Design** архитектура
+- **Next.js 14** with TypeScript
+- **Material-UI** for components
+- **Styled Components** for styling
+- **Apollo Client** for GraphQL
+- **Atomic Design** architecture
 
 ### Backend (Server)
-- **NestJS** с TypeScript
-- **TypeORM** для работы с базой данных
-- **PostgreSQL** как основная БД
-- **GraphQL** API с Apollo Server
-- **Docker** для развертывания
+- **NestJS** with TypeScript
+- **TypeORM** for database operations
+- **PostgreSQL** as the main database
+- **GraphQL** API with Apollo Server
+- **Docker** for deployment
 
-## 🚀 Быстрый старт
+## 🚀 Quick start
 
-### 1. Клонирование и установка
+### 1. Cloning and installation
 ```bash
 git clone <repository-url>
 cd comments
 
-# Установка зависимостей клиента
+# Installing client dependencies
 cd client
 pnpm install
 
-# Установка зависимостей сервера
+# Installing server dependencies
 cd ../server
 pnpm install
 ```
 
-### 2. Запуск базы данных
+### 2. Start the database
 ```bash
 cd server
-# Убедитесь, что Docker запущен
+# Make sure Docker is running
 docker-compose up -d postgres
 ```
 
-### 3. Запуск сервера
+### 3. Start the server
 ```bash
 cd server
 pnpm start:dev
 ```
 
-### 4. Запуск клиента
+### 4. Start the client
 ```bash
 cd client
 pnpm dev
 ```
 
-## 🌐 Доступные сервисы
+## 🌐 Available services
 
-- **Клиент**: http://localhost:3000
-- **Сервер**: http://localhost:4000
+- **Client**: http://localhost:3000
+- **Server**: http://localhost:4000
 - **GraphQL**: http://localhost:4000/graphql
 - **pgAdmin**: http://localhost:5050 (admin@admin.com / admin)
 
-## 📁 Структура проекта
+## 📁 Project structure
 
 ```
 comments/
-├── client/                 # Next.js клиент
+├── client/                 # Next.js client
 │   ├── src/
-│   │   ├── components/    # Atomic Design компоненты
-│   │   ├── graphql/       # GraphQL схемы и типы
-│   │   ├── hooks/         # React хуки
-│   │   └── app/           # Next.js страницы
+│   │   ├── components/    # Atomic Design components
+│   │   ├── graphql/       # GraphQL schemas and types
+│   │   ├── hooks/         # React hooks
+│   │   └── app/           # Next.js pages
 │   └── package.json
-├── server/                 # NestJS сервер
+├── server/                 # NestJS server
 │   ├── src/
-│   │   ├── entities/      # TypeORM сущности
-│   │   ├── services/      # Бизнес-логика
-│   │   ├── resolvers/     # GraphQL резолверы
-│   │   └── modules/       # NestJS модули
+│   │   ├── entities/      # TypeORM entities
+│   │   ├── services/      # Business logic
+│   │   ├── resolvers/     # GraphQL resolvers
+│   │   └── modules/       # NestJS modules
 │   ├── docker-compose.yml # PostgreSQL
 │   └── package.json
 └── README.md
 ```
 
-## 🔧 Основные функции
+## 🔧 Main features
 
-### Клиент
-- ✅ Создание комментариев и ответов
-- ✅ Иерархическое отображение
-- ✅ Пагинация (25 комментариев на страницу)
-- ✅ Polling для real-time обновлений
-- ✅ Валидация форм
-- ✅ Responsive дизайн
+### Client
+- ✅ Create comments and replies
+- ✅ Hierarchical display
+- ✅ Pagination (25 comments per page)
+- ✅ Polling for real-time updates
+- ✅ Form validation
+- ✅ Responsive design
 
-### Сервер
+### Server
 - ✅ GraphQL API
-- ✅ PostgreSQL с TypeORM
-- ✅ Валидация данных
-- ✅ Иерархические комментарии
-- ✅ Автоматические миграции
+- ✅ PostgreSQL with TypeORM
+- ✅ Data validation
+- ✅ Hierarchical comments
+- ✅ Automatic migrations
 
 ## 🎨 Atomic Design
 
@@ -138,9 +138,9 @@ query {
 ```graphql
 mutation {
   createComment(input: {
-    author: "John Doe"
-    email: "john@example.com"
-    content: "Отличный пост!"
+    author: “John Doe”
+    email: “john@example.com”
+    content: “Great post!”
   }) {
     id
     author
@@ -149,98 +149,97 @@ mutation {
 }
 ```
 
-## 🗄️ База данных
+## 🗄️ Database
 
-### Таблица `comments`
-- UUID первичный ключ
-- Иерархическая структура (parent_id)
-- Автоматические timestamps
-- Валидация на уровне БД
+### `comments` table
+- UUID primary key
+- Hierarchical structure (parent_id)
+- Automatic timestamps
+- Database-level validation
 
-### Индексы
-- parent_id для быстрого поиска ответов
-- homepage для поиска по URL
-- created_at для сортировки
+### Indexes
+- parent_id for quick search of replies
+- homepage for search by URL
+- created_at for sorting
 
-## 🚀 Развертывание
+## 🚀 Deployment
 
-### Разработка
+### Development
 ```bash
-# Клиент
+# Client
 cd client && pnpm dev
 
-# Сервер
+# Server
 cd server && pnpm start:dev
 
-# База данных
+# Database
 cd server && docker-compose up -d
 ```
 
-### Продакшн
+### Production
 ```bash
-# Клиент
+# Client
 cd client && pnpm build && pnpm start
 
-# Сервер
+# Server
 cd server && pnpm build && pnpm start:prod
 ```
 
-## 🧪 Тестирование
+## 🧪 Testing
 
-### Клиент
+### Client
 ```bash
 cd client
 pnpm test
 ```
 
-### Сервер
+### Server
 ```bash
 cd server
 pnpm test
 ```
 
-## 📚 Документация
+## 📚 Documentation
 
-- [Клиент](./client/README.md) - Детали Next.js приложения
-- [Сервер](./server/README.md) - Детали NestJS API
-- [Интеграция](./server/CLIENT_INTEGRATION.md) - Как подключить клиент к серверу
-- [Быстрый старт](./server/QUICK_START.md) - Быстрый запуск сервера
+- [Client](./client/README.md) - Details of the Next.js application
+- [Server](./server/README.md) - Details of the NestJS API
+- [Integration](./server/CLIENT_INTEGRATION.md) - How to connect the client to the server
+- [Quick Start](./server/QUICK_START.md) - Quick start of the server
 
-## 🔒 Безопасность
+## 🔒 Security
 
-- Валидация входных данных
-- CORS настройки
-- Подготовленные SQL запросы
-- Ограничения на уровне БД
+- Input data validation
+- CORS settings
+- Prepared SQL queries
+- Database-level restrictions
 
-## 📈 Производительность
+## 📈 Performance
 
-- React.memo и useCallback для оптимизации
-- Apollo Client кэширование
+- React.memo and useCallback for optimization
+- Apollo Client caching
 - TypeORM lazy loading
-- Индексы БД для быстрых запросов
+- Database indexes for fast queries
 
-## 🤝 Вклад в проект
+## 🤝 Contributing to the project
 
-1. Fork репозитория
-2. Создайте feature branch
-3. Commit изменения
-4. Push в branch
-5. Создайте Pull Request
+1. Fork the repository
+2. Create a feature branch
+3. Commit changes
+4. Push to the branch
+5. Create a Pull Request
 
-## 📄 Лицензия
+## 📄 License
 
 MIT License
 
-## 🆘 Поддержка
+## 🆘 Support
 
-При возникновении проблем:
-1. Проверьте логи сервера и клиента
-2. Убедитесь в доступности PostgreSQL
-3. Проверьте переменные окружения
-4. Создайте Issue с описанием проблемы
+If you encounter any issues:
+1. Check the server and client logs
+2. Ensure PostgreSQL is available
+3. Check the environment variables
+4. Create an issue with a description of the problem
 
 ---
-
-**Создано с ❤️ используя современные технологии разработки**
-
+## dzencode
+**Created with  using modern development technologies**

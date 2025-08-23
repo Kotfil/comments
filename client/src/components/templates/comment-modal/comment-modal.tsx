@@ -3,7 +3,7 @@ import { Modal, Box } from '@mui/material';
 import {
   CommentForm,
   CommentFormData,
-} from '@/components/organisms/comment-form';
+} from '@/components/comment/comment-form';
 import { CommentModalProps } from './comment-modal.types';
 
 export const CommentModal: React.FC<CommentModalProps> = ({

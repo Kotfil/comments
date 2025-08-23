@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconButton } from '@/components/atoms/icon-button';
+import { IconButton } from '@/components/atomic/icon-button';
 import { ActionButtonsProps } from './action-buttons.types';
 import { ActionButtonsContainer } from './action-buttons.styles';
 

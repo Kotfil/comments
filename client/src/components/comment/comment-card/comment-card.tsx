@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
 import { Comment } from '@/data/mock-comments';
-import { UserInfo } from '@/components/molecules/user-info';
-import { ActionButtons } from '@/components/molecules/action-buttons';
-import { CommentContent } from '@/components/molecules/comment-content';
+import { UserInfo } from '@/components/simple-components/user-info';
+import { ActionButtons } from '@/components/simple-components/action-buttons';
+import { CommentContent } from '@/components/simple-components/comment-content';
 import { CommentCardProps } from './comment-card.types';
 import {
   StyledCommentCard,

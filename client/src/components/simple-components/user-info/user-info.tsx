@@ -1,6 +1,6 @@
 import React from 'react';
-import { Avatar } from '@/components/atoms/avatar';
-import { Typography } from '@/components/atoms/typography';
+import { Avatar } from '@/components/atomic/avatar';
+import { Typography } from '@/components/atomic/typography';
 import { UserInfoProps } from './user-info.types';
 import { UserInfoContainer, UserInfoContent } from './user-info.styles';
 

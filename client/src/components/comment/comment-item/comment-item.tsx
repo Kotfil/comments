@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
 import { Box } from '@mui/material';
-import { CommentHeader } from '@/components/molecules/comment-header';
-import { CommentContent } from '@/components/molecules/comment-content';
-import { AttachedFiles } from '@/components/molecules/attached-files';
+import { CommentHeader } from '@/components/simple-components/comment-header';
+import { CommentContent } from '@/components/simple-components/comment-content';
+import { AttachedFiles } from '@/components/simple-components/attached-files';
 import { CommentItemProps } from './comment-item.types';
 
 export const CommentItem: React.FC<CommentItemProps> = ({

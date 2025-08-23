@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-import { Avatar } from '@/components/atoms/avatar';
-import { IconButton } from '@/components/atoms/icon-button';
+import { Avatar } from '@/components/atomic/avatar';
+import { IconButton } from '@/components/atomic/icon-button';
 import { CommentHeaderProps } from './comment-header.types';
 
 export type { CommentHeaderProps };

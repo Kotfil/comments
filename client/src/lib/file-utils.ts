@@ -1,4 +1,4 @@
-import { UploadedFile } from '@/components/molecules/file-upload';
+import { UploadedFile } from '@/components/simple-components/file-upload';
 
 /**
  * Конвертирует файл в base64 строку

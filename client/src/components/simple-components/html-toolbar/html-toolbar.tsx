@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import { FormatItalic, FormatBold, Code, Link } from '@mui/icons-material';
-import { IconButton } from '@/components/atoms/icon-button';
+import { IconButton } from '@/components/atomic/icon-button';
 import { HTMLToolbarProps } from './html-toolbar.types';
 
 export type { HTMLToolbarProps };

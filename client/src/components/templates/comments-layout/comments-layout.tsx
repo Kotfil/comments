@@ -1,6 +1,6 @@
 import React from 'react';
-import { Typography } from '@/components/atoms/typography';
-import { Button } from '@/components/atoms/button';
+import { Typography } from '@/components/atomic/typography';
+import { Button } from '@/components/atomic/button';
 import { CommentsLayoutProps } from './comments-layout.types';
 import { StyledContainer, LayoutHeader } from './comments-layout.styles';
 
